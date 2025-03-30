@@ -11,6 +11,7 @@ import {
   Star,
   Users,
 } from "lucide-react";
+import HeroImage from "../assets/hero.svg";
 
 const LandingPage = () => {
   return (
@@ -55,10 +56,10 @@ const LandingPage = () => {
                 </div> */}
               </div>
               <div className="flex items-center justify-center">
-                <div className="relative aspect-video overflow-hidden rounded-xl border bg-background">
+                <div className="relative aspect-video overflow-hidden rounded-xl bg-background">
                   <img
-                    src="/placeholder.jpg"
-                    alt="Dashboard Preview"
+                    src={HeroImage}
+                    alt="Product Preview"
                     className="object-cover w-full h-full"
                   />
                 </div>

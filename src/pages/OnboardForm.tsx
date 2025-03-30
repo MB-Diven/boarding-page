@@ -239,7 +239,6 @@ export default function BusinessQuiz() {
   };
 
   const nextStep = () => {
-    // Simple validation
     if (step === 1 && !formData.businessName) {
       toast.error("Business name required", {
         description: "Please enter your business name to continue.",
@@ -247,7 +246,6 @@ export default function BusinessQuiz() {
       return;
     }
 
-    // Validate inventory step for non-beauty salon
     if (step === 3 && !isBeautySalon && !formData.inventorySize) {
       toast.error("Inventory information required", {
         description: "Please select your inventory size to continue.",
@@ -256,7 +254,6 @@ export default function BusinessQuiz() {
       return;
     }
 
-    // Validate team & products step for beauty salon
     if (step === 3 && isBeautySalon && formData.products.length === 0) {
       toast.error("Services required", {
         description: "Please add at least one service that you offer.",
@@ -266,15 +263,12 @@ export default function BusinessQuiz() {
 
     const newStep = step + 1;
 
-    // Handle final step
     if (newStep > totalSteps) {
-      // Submit form
       toast("Quiz completed!", {
         description:
           "Thank you for providing your business information. We'll be in touch soon!",
       });
-      // In a real app, you would submit the data to your backend here
-      // For demo purposes, we'll just redirect to the homepage after a delay
+      console.log(formData);
 
       return;
     }

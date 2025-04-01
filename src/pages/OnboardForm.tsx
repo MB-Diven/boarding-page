@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Check,
   CheckCircle2,
+  Loader,
   Plus,
   Trash2,
   Upload,
@@ -35,6 +36,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { supabase } from "./Layout";
 
 const businessTypes = [
   "Equipment Rental",
@@ -69,6 +71,7 @@ interface Product {
 
 export default function BusinessQuiz() {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
@@ -84,7 +87,6 @@ export default function BusinessQuiz() {
     products: [] as Product[],
     contactEmail: "",
     contactPhone: "",
-    websitePreference: "template",
     additionalFeatures: [] as string[],
   });
 
@@ -238,7 +240,7 @@ export default function BusinessQuiz() {
     }));
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (step === 1 && !formData.businessName) {
       toast.error("Business name required", {
         description: "Please enter your business name to continue.",
@@ -264,12 +266,40 @@ export default function BusinessQuiz() {
     const newStep = step + 1;
 
     if (newStep > totalSteps) {
+      setLoading(true);
       toast("Quiz completed!", {
-        description:
-          "Thank you for providing your business information. We'll be in touch soon!",
+        description: "Please wait while we process your information.",
       });
-      console.log(formData);
 
+      const body = new FormData();
+
+      Object.entries(formData).forEach(([key, value]) => {
+        if (
+          !(
+            (value instanceof File && key !== "logo") ||
+            ["workers", "products", "worksAlone"].includes(key)
+          )
+        ) {
+          body.append(
+            key,
+            value instanceof File ? value : JSON.stringify(value),
+          );
+        }
+      });
+
+      const { data, error } = await supabase.functions.invoke(
+        "create-checkout-session",
+        {
+          body,
+          method: "POST",
+        },
+      );
+
+      if (error) {
+        console.error("Err: ", error);
+      }
+
+      window.location.href = data.url;
       return;
     }
 
@@ -689,6 +719,7 @@ export default function BusinessQuiz() {
                               id="productPrice"
                               name="price"
                               placeholder="49.99"
+                              type="number"
                               className="pl-7"
                               value={newProduct.price}
                               onChange={handleNewProductChange}
@@ -920,6 +951,7 @@ export default function BusinessQuiz() {
                               name="price"
                               placeholder="99.99"
                               className="pl-7"
+                              type="number"
                               value={newProduct.price}
                               onChange={handleNewProductChange}
                             />
@@ -999,59 +1031,19 @@ export default function BusinessQuiz() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label>Website Setup Preference</Label>
-                <RadioGroup
-                  value={formData.websitePreference}
-                  onValueChange={(value) =>
-                    handleSelectChange("websitePreference", value)
-                  }
-                  className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-                >
-                  <div className="flex flex-col rounded-md border p-4">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="template" id="website-template" />
-                      <Label
-                        htmlFor="website-template"
-                        className="font-medium cursor-pointer"
-                      >
-                        Use a Template
-                      </Label>
-                    </div>
-                    <p className="mt-2 text-sm text-muted-foreground pl-6">
-                      Get started quickly with a pre-designed template that you
-                      can customize
-                    </p>
-                  </div>
-                  <div className="flex flex-col rounded-md border p-4">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="custom" id="website-custom" />
-                      <Label
-                        htmlFor="website-custom"
-                        className="font-medium cursor-pointer"
-                      >
-                        Custom Design
-                      </Label>
-                    </div>
-                    <p className="mt-2 text-sm text-muted-foreground pl-6">
-                      Work with our designers to create a unique website for
-                      your business
-                    </p>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              <div className="space-y-2">
                 <Label>Additional Features</Label>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {[
                     "Online Payments",
                     "Booking Calendar",
                     "Customer Reviews",
-                    isBeautySalon
-                      ? "Service Management"
-                      : "Inventory Management",
-                    isBeautySalon ? "Gift Cards" : "Damage Deposits",
-                    isBeautySalon ? "" : "Delivery Options",
+                    ...(isBeautySalon
+                      ? ["Service Management", "Gift Cards"]
+                      : [
+                          "Inventory Management",
+                          "Damage Deposits",
+                          "Delivery Options",
+                        ]),
                   ].map((feature) => (
                     <div
                       key={feature}
@@ -1119,14 +1111,24 @@ export default function BusinessQuiz() {
       </div>
 
       <Card className="border-2">
-        {getStepContent()}
+        {loading ? (
+          <div className="flex items-center w-full grow justify-center h-full">
+            <Loader />
+          </div>
+        ) : (
+          getStepContent()
+        )}
 
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={prevStep} disabled={step === 1}>
+          <Button
+            variant="outline"
+            onClick={loading ? () => {} : prevStep}
+            disabled={step === 1}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
-          <Button onClick={nextStep}>
+          <Button onClick={loading ? () => {} : nextStep}>
             {step === totalSteps ? (
               <>
                 Submit

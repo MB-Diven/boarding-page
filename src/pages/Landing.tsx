@@ -19,7 +19,7 @@ const LandingPage = () => {
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="flex flex-col md:flex-row gap-6 md:gap-12 justify-center items-center">
+            <div className="flex flex-col md:flex-row gap-6 md:gap-12 justify-between items-center">
               <div className="flex w-full max-w-lg flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">

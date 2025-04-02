@@ -33,13 +33,13 @@ const LandingPage = () => {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button size="lg" asChild>
-                    <a href="#">
+                    <a href="/onboarding">
                       Start Free Trial
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <a href="#">Book a Demo</a>
+                    <a href="/onboarding">Book a Demo</a>
                   </Button>
                 </div>
                 {/* <div className="flex items-center space-x-4 text-sm">
@@ -517,7 +517,7 @@ const LandingPage = () => {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Button size="lg" variant="secondary" asChild>
-                  <a href="#">
+                  <a href="/onboarding">
                     Start Your 14-Day Free Trial
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
@@ -528,7 +528,7 @@ const LandingPage = () => {
                   className="bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary"
                   asChild
                 >
-                  <a href="#">Schedule a Demo</a>
+                  <a href="/onboarding">Schedule a Demo</a>
                 </Button>
               </div>
               <p className="text-sm">

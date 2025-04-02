@@ -65,6 +65,7 @@ export default function SetPasswordPage() {
             password,
             checkoutSessionId: searchParams.get("session_id"),
           },
+          method: "POST",
         },
       );
 

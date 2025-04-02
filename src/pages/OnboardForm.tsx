@@ -80,6 +80,7 @@ export default function BusinessQuiz() {
     businessDescription: "",
     logo: null as File | null,
     primaryColor: "#4f46e5",
+    country: "LT",
     inventorySize: "",
     rentalPeriod: "",
     worksAlone: false,
@@ -286,6 +287,8 @@ export default function BusinessQuiz() {
           );
         }
       });
+
+      body.append("ip", localStorage.getItem("ip") ?? "0.0.0.0");
 
       const { data, error } = await supabase.functions.invoke(
         "create-checkout-session",
@@ -1119,28 +1122,41 @@ export default function BusinessQuiz() {
           getStepContent()
         )}
 
-        <CardFooter className="flex justify-between">
-          <Button
-            variant="outline"
-            onClick={loading ? () => {} : prevStep}
-            disabled={step === 1}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
-          </Button>
-          <Button onClick={loading ? () => {} : nextStep}>
-            {step === totalSteps ? (
-              <>
-                Submit
-                <Check className="ml-2 h-4 w-4" />
-              </>
-            ) : (
-              <>
-                Next
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </>
-            )}
-          </Button>
+        <CardFooter className="flex flex-col justify-center items-start">
+          <span className="mb-2 text-sm text-gray-400">
+            By finishing the quiz, you agree to our{" "}
+            <a
+              href="/terms-and-conditions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-secondary"
+            >
+              terms and conditions.
+            </a>
+          </span>
+          <div className="flex w-full justify-between">
+            <Button
+              variant="outline"
+              onClick={loading ? () => {} : prevStep}
+              disabled={step === 1}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back
+            </Button>
+            <Button onClick={loading ? () => {} : nextStep}>
+              {step === totalSteps ? (
+                <>
+                  Submit
+                  <Check className="ml-2 h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  Next
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </>
+              )}
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </div>

@@ -1,14 +1,36 @@
 import { Button } from "./ui/button";
 
+import divenLogo from "../assets/logo_big.svg";
+import divenLogoSmall from "../assets/logo_small.svg";
+
 const Header = () => {
+  const pathname = window.location.pathname;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container px-5 mx-auto flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <div className="flex gap-6 md:gap-10">
-          <a href="/" className="flex items-center space-x-2">
-            <span className="inline-block font-bold text-xl">Diven</span>
+          <a href="/" className="hidden md:flex items-center space-x-2">
+            <img
+              width={500}
+              className="max-w-3xs"
+              src={divenLogo}
+              alt="Diven logo"
+            />
           </a>
-          <nav className="hidden gap-6 md:flex">
+          <a
+            href="/"
+            className="flex md:hidden max-w-[50px] object-cover max-h-[50px] items-center space-x-2"
+          >
+            <img
+              width={125}
+              height={125}
+              src={divenLogoSmall}
+              alt="Diven logo"
+              className="object-cover w-[125px] h-[125px]"
+            />
+          </a>
+          <nav className={`hidden gap-6 ${pathname === "/" ? "md:flex" : ""}`}>
             <a
               href="#features"
               className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary"

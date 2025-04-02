@@ -5,6 +5,7 @@ import "./index.css";
 import LandingPage from "@/pages/Landing";
 import OnboardForm from "@/pages/OnboardForm";
 import Layout from "./pages/Layout";
+import SetPasswordPage from "./pages/SetPassword";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: "onboard",
         Component: OnboardForm,
+      },
+      {
+        path: "set-password",
+        Component: SetPasswordPage,
       },
     ],
   },

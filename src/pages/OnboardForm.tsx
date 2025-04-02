@@ -398,7 +398,7 @@ export default function BusinessQuiz() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 grow">
                 <Label htmlFor="businessType">Business Type</Label>
                 <Select
                   value={formData.businessType}
@@ -406,7 +406,7 @@ export default function BusinessQuiz() {
                     handleSelectChange("businessType", value)
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select your business type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -678,7 +678,7 @@ export default function BusinessQuiz() {
                               </div>
                             )}
                             <div className="space-y-1 flex-1 pr-4">
-                              <div className="flex justify-between">
+                              <div className="flex gap-1 justify-between">
                                 <p className="font-medium">{product.name}</p>
                                 <p className="font-medium">${product.price}</p>
                               </div>
@@ -726,8 +726,8 @@ export default function BusinessQuiz() {
                               id="productPrice"
                               name="price"
                               placeholder="49.99"
-                              type="number"
                               className="pl-7"
+                              type="number"
                               value={newProduct.price}
                               onChange={handleNewProductChange}
                             />

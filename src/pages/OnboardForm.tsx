@@ -1120,7 +1120,7 @@ export default function BusinessQuiz() {
       <Card className="border-2">
         {loading ? (
           <div className="flex items-center w-full grow justify-center h-full">
-            <Loader />
+            <Loader className="animate-spin" />
           </div>
         ) : (
           getStepContent()

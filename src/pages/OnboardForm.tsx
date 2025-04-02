@@ -300,8 +300,12 @@ export default function BusinessQuiz() {
 
       if (error) {
         console.error("Err: ", error);
+        toast.error("Something went wrong!", {
+          description: "Please try again later.",
+        });
       }
 
+      setLoading(false);
       window.location.href = data.url;
       return;
     }

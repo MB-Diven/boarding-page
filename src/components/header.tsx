@@ -10,10 +10,13 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container px-5 mx-auto flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <div className="flex gap-6 md:gap-10">
-          <a href="/" className="hidden md:flex items-center space-x-2">
+          <a
+            href="/"
+            className="hidden md:flex items-center max-h-[50px] max-w-[125px] space-x-2"
+          >
             <img
               width={500}
-              className="max-w-3xs"
+              className="object-cover w-[550px] h-[250px]"
               src={divenLogo}
               alt="Diven logo"
             />

@@ -12,6 +12,7 @@ import {
   Users,
 } from "lucide-react";
 import HeroImage from "../assets/hero.svg";
+import { Badge } from "@/components/ui/badge";
 
 const LandingPage = () => {
   return (
@@ -255,7 +256,12 @@ const LandingPage = () => {
             <div className="mx-auto  max-w-5xl gap-6 py-12 flex flex-wrap justify-center items-center">
               <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm">
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-bold">Starter</h3>
+                  <h3 className="text-2xl font-bold flex justify-start items-center gap-2">
+                    Starter{" "}
+                    <Badge variant="secondary" className="text-white">
+                      Free 7-day trial
+                    </Badge>
+                  </h3>
                   <p className="text-muted-foreground">
                     Perfect for all kinds of rental businesses just getting
                     started.
@@ -293,9 +299,11 @@ const LandingPage = () => {
                     <span>Custom domain</span>
                   </li>
                 </ul>
-                <Button className="mt-8" size="lg">
-                  Start Free Trial
-                </Button>
+                <a href="/onboard">
+                  <Button className="mt-8" size="lg">
+                    Start Free Trial
+                  </Button>
+                </a>
               </div>
               {/* <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm ring-2 ring-primary">
                 <div className="space-y-2">
@@ -518,7 +526,11 @@ const LandingPage = () => {
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Button size="lg" variant="secondary" asChild>
                   <a href="/onboard">
+<<<<<<< Updated upstream
                     Start Your 14-Day Free Trial
+=======
+                    Start Your 7-Day Free Trial
+>>>>>>> Stashed changes
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>

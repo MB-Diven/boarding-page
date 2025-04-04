@@ -85,7 +85,7 @@ export default function SetPasswordPage() {
       });
 
       // Redirect to login page or dashboard
-      navigate("/dashboard");
+      navigate(data.url);
     } catch (error) {
       toast.error("Error setting password", {
         description:

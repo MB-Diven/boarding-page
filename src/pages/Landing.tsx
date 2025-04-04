@@ -526,11 +526,7 @@ const LandingPage = () => {
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Button size="lg" variant="secondary" asChild>
                   <a href="/onboard">
-<<<<<<< Updated upstream
-                    Start Your 14-Day Free Trial
-=======
                     Start Your 7-Day Free Trial
->>>>>>> Stashed changes
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>

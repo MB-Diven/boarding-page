@@ -65,7 +65,7 @@ interface Product {
   name: string;
   price: string;
   description: string;
-  image: File | null;
+  image: File;
   imagePreview: string | null;
 }
 
@@ -103,7 +103,7 @@ export default function BusinessQuiz() {
     name: "",
     price: "",
     description: "",
-    image: null,
+    image: new File([], ""),
     imagePreview: null,
   });
 
@@ -207,6 +207,13 @@ export default function BusinessQuiz() {
       return;
     }
 
+    if (!newProduct.image.size) {
+      toast.error("Missing image", {
+        description: "Please provide an image for the product.",
+      });
+      return;
+    }
+
     const product: Product = {
       ...newProduct,
       id: Date.now().toString(),
@@ -222,7 +229,7 @@ export default function BusinessQuiz() {
       name: "",
       price: "",
       description: "",
-      image: null,
+      image: new File([], ""),
       imagePreview: null,
     });
   };
@@ -448,19 +455,26 @@ export default function BusinessQuiz() {
               <div className="space-y-2">
                 <Label htmlFor="logo">Business Logo</Label>
                 <div className="flex flex-col items-center gap-4">
-                  {logoPreview ? (
-                    <div className="relative w-40 h-40 border rounded-lg overflow-hidden">
-                      <img
-                        src={logoPreview || "/placeholder.svg"}
-                        alt="Logo preview"
-                        className="object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-40 h-40 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted">
-                      <Upload className="h-10 w-10 text-muted-foreground" />
-                    </div>
-                  )}
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      document.getElementById("logo-upload")?.click();
+                    }}
+                  >
+                    {logoPreview ? (
+                      <div className="relative w-40 h-40 border rounded-lg overflow-hidden">
+                        <img
+                          src={logoPreview || "/placeholder.svg"}
+                          alt="Logo preview"
+                          className="object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-40 h-40 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted">
+                        <Upload className="h-10 w-10 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
 
                   <div className="flex items-center justify-center w-full">
                     <Label
@@ -748,21 +762,31 @@ export default function BusinessQuiz() {
                       <div className="space-y-2">
                         <Label htmlFor="serviceImage">Service Image</Label>
                         <div className="flex items-center gap-4">
-                          {newProduct.imagePreview ? (
-                            <div className="relative w-20 h-20 border rounded-md overflow-hidden">
-                              <img
-                                src={
-                                  newProduct.imagePreview || "/placeholder.svg"
-                                }
-                                alt="Service preview"
-                                className="object-cover"
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-20 h-20 border-2 border-dashed rounded-md flex items-center justify-center bg-muted">
-                              <Upload className="h-6 w-6 text-muted-foreground" />
-                            </div>
-                          )}
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => {
+                              document
+                                .getElementById("service-image-upload")
+                                ?.click();
+                            }}
+                          >
+                            {newProduct.imagePreview ? (
+                              <div className="relative w-20 h-20 border rounded-md overflow-hidden">
+                                <img
+                                  src={
+                                    newProduct.imagePreview ||
+                                    "/placeholder.svg"
+                                  }
+                                  alt="Service preview"
+                                  className="object-cover"
+                                />
+                              </div>
+                            ) : (
+                              <div className="w-20 h-20 border-2 border-dashed rounded-md flex items-center justify-center bg-muted">
+                                <Upload className="h-6 w-6 text-muted-foreground" />
+                              </div>
+                            )}
+                          </div>
                           <div className="flex-1">
                             <Label
                               htmlFor="service-image-upload"
@@ -780,7 +804,7 @@ export default function BusinessQuiz() {
                               onChange={handleServiceImageChange}
                             />
                             <p className="mt-1 text-xs text-muted-foreground">
-                              Upload an image for this service (optional)
+                              Upload an image for this service
                             </p>
                           </div>
                         </div>
@@ -1142,12 +1166,12 @@ export default function BusinessQuiz() {
             <Button
               variant="outline"
               onClick={loading ? () => {} : prevStep}
-              disabled={step === 1}
+              disabled={step === 1 || loading}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
-            <Button onClick={loading ? () => {} : nextStep}>
+            <Button disabled={loading} onClick={loading ? () => {} : nextStep}>
               {step === totalSteps ? (
                 <>
                   Submit

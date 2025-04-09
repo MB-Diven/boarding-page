@@ -38,6 +38,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "./Layout";
 
+import PhoneInput, {
+  type Value,
+  parsePhoneNumber,
+} from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+
 const businessTypes = [
   "Equipment Rental",
   "Vehicle Rental",
@@ -120,10 +126,21 @@ export default function BusinessQuiz() {
   }, [step, totalSteps]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Add a specific handler for the phone input
+  const handlePhoneChange = (value: Value | undefined) => {
+    console.log(value);
+    const parsedPhoneNumber = parsePhoneNumber(value || "");
+    setFormData((prev) => ({
+      ...prev,
+      contactPhone: value || "",
+      country: parsedPhoneNumber?.country ? parsedPhoneNumber.country : "LT",
+    }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -165,14 +182,14 @@ export default function BusinessQuiz() {
   };
 
   const handleNewWorkerChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setNewWorker((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleNewProductChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({ ...prev, [name]: value }));
@@ -290,7 +307,7 @@ export default function BusinessQuiz() {
         ) {
           body.append(
             key,
-            value instanceof File ? value : JSON.stringify(value),
+            value instanceof File ? value : JSON.stringify(value)
           );
         }
       });
@@ -302,7 +319,7 @@ export default function BusinessQuiz() {
         {
           body,
           method: "POST",
-        },
+        }
       );
 
       if (error) {
@@ -567,7 +584,7 @@ export default function BusinessQuiz() {
                                         .map((serviceId) => {
                                           const service =
                                             formData.products.find(
-                                              (p) => p.id === serviceId,
+                                              (p) => p.id === serviceId
                                             );
                                           return service ? service.name : "";
                                         })
@@ -635,7 +652,7 @@ export default function BusinessQuiz() {
                                       <Checkbox
                                         id={`service-${service.id}`}
                                         checked={newWorker.services.includes(
-                                          service.id,
+                                          service.id
                                         )}
                                         onCheckedChange={() =>
                                           handleWorkerServiceToggle(service.id)
@@ -1039,13 +1056,18 @@ export default function BusinessQuiz() {
 
               <div className="space-y-2">
                 <Label htmlFor="contactPhone">Business Phone</Label>
-                <Input
+                {/* Replace Input with PhoneInput */}
+                <PhoneInput
                   id="contactPhone"
                   name="contactPhone"
-                  type="tel"
-                  placeholder="(123) 456-7890"
-                  value={formData.contactPhone}
-                  onChange={handleInputChange}
+                  placeholder="Enter phone number"
+                  value={formData.contactPhone as Value | undefined}
+                  onChange={handlePhoneChange}
+                  // Add the 'Input' class for styling consistency (optional, depends on your setup)
+                  // You might need a custom CSS file to style PhoneInput to match your UI components
+                  inputComponent={Input} // Use your existing Input component for styling
+                  defaultCountry="US" // Optional: Set a default country
+                  // className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" // Apply Tailwind classes directly if needed, though inputComponent is often better
                 />
               </div>
             </CardContent>

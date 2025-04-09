@@ -63,7 +63,7 @@ const Header = () => {
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex gap-2 items-center space-x-2">
             <a
-              href="#"
+              href="/login"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
               Login

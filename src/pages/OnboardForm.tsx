@@ -321,42 +321,41 @@ export default function BusinessQuiz() {
         },
       );
 
-      formData.products.forEach(
-        async ({ id, name, price, description, image }) => {
-          const fileName = `${name}-${id}.png`;
-          const fileBitArray = new Uint8Array(await image.arrayBuffer());
-          const { data: existingFiles } = await supabase.storage
-            .from("service-logos")
-            .list("", {
-              search: fileName,
-            });
-
-          if (existingFiles && existingFiles.length > 0) {
-          }
-
-          const { error } = await supabase.storage
-            .from("service-logos")
-            .upload(fileName, fileBitArray, {
-              contentType: "image/png",
-              upsert: false,
-            });
-
-          if (error) {
-            console.log(error);
-            return;
-          }
-          const productImageLink = `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/service-logos/${fileName}`;
-          const { data: product } = await supabase.from("products").insert({
-            id,
-            name,
-            price,
-            description,
-            image: productImageLink,
+      for (let i = 0; i < formData.products.length; i++) {
+        const { id, name, price, description, image } = formData.products[i];
+        const fileName = `${name}-${id}.png`;
+        const fileBitArray = new Uint8Array(await image.arrayBuffer());
+        const { data: existingFiles } = await supabase.storage
+          .from("service-logos")
+          .list("", {
+            search: fileName,
           });
 
-          console.log(product);
-        },
-      );
+        if (existingFiles && existingFiles.length > 0) {
+        }
+
+        const { error } = await supabase.storage
+          .from("service-logos")
+          .upload(fileName, fileBitArray, {
+            contentType: "image/png",
+            upsert: false,
+          });
+
+        if (error) {
+          console.log(error);
+          return;
+        }
+        const productImageLink = `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/service-logos/${fileName}`;
+        const { data: product } = await supabase.from("products").insert({
+          id,
+          name,
+          price,
+          description,
+          image: productImageLink,
+        });
+
+        console.log(product);
+      }
 
       if (error) {
         console.error("Err: ", error);
@@ -433,6 +432,13 @@ export default function BusinessQuiz() {
       services: [],
     });
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("formData")) {
+      const storedData = JSON.parse(localStorage.getItem("formData") || "{}");
+      setFormData(storedData);
+    }
+  }, []);
 
   // Get the current step content
   const getStepContent = () => {

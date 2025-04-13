@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Check,
   CheckCircle2,
+  Dessert,
   Loader,
   Plus,
   Trash2,
@@ -43,6 +44,7 @@ import PhoneInput, {
   parsePhoneNumber,
 } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { Worker } from "node:worker_threads";
 
 const businessTypes = [
   "Equipment Rental",
@@ -264,7 +266,7 @@ export default function BusinessQuiz() {
     }));
   };
 
-  const nextStep = async () => {
+  const handleNextStep = async () => {
     if (step === 1 && !formData.businessName) {
       toast.error("Business name required", {
         description: "Please enter your business name to continue.",
@@ -321,47 +323,58 @@ export default function BusinessQuiz() {
         },
       );
 
-      for (let i = 0; i < formData.products.length; i++) {
-        const { id, name, price, description, image } = formData.products[i];
-        const fileName = `${name}-${id}.png`;
-        const fileBitArray = new Uint8Array(await image.arrayBuffer());
-        const { data: existingFiles } = await supabase.storage
-          .from("service-logos")
-          .list("", {
-            search: fileName,
-          });
-
-        if (existingFiles && existingFiles.length > 0) {
-        }
-
-        const { error } = await supabase.storage
-          .from("service-logos")
-          .upload(fileName, fileBitArray, {
-            contentType: "image/png",
-            upsert: false,
-          });
-
-        if (error) {
-          console.log(error);
-          return;
-        }
-        const productImageLink = `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/service-logos/${fileName}`;
-        const { data: product } = await supabase.from("products").insert({
-          id,
-          name,
-          price,
-          description,
-          image: productImageLink,
-        });
-
-        console.log(product);
-      }
-
       if (error) {
         console.error("Err: ", error);
         toast.error("Something went wrong!", {
           description: "Please try again later.",
         });
+      }
+
+      const workerCreateFormData = new FormData();
+
+      for (let i = 0; i < formData.products.length; i++) {
+        workerCreateFormData.append(
+          "products",
+          JSON.stringify({
+            name: formData.products[i].image,
+            price: formData.products[i].price,
+            description: formData.products[i].description,
+            id: formData.products[i].id,
+          }),
+        );
+
+        workerCreateFormData.append(
+          "productImages",
+          formData.products[i].image,
+        );
+      }
+
+      for (let i = 0; i < formData.workers.length; i++) {
+        workerCreateFormData.append(
+          "workers",
+          JSON.stringify({
+            name: formData.workers[i].name,
+            id: formData.workers[i].id,
+            contact: formData.workers[i].contact,
+            services: formData.workers[i].services,
+          }),
+        );
+      }
+
+      const { data: workerData, error: workerError } =
+        await supabase.functions.invoke("create-workers", {
+          body: workerCreateFormData,
+          method: "POST",
+        });
+
+      if (workerError) {
+        console.error("Error creating workers:", workerError);
+        setLoading(false);
+        return;
+      }
+
+      if (workerData) {
+        console.log("Workers created successfully:", workerData);
       }
 
       setLoading(false);
@@ -372,7 +385,7 @@ export default function BusinessQuiz() {
     setStep(newStep);
   };
 
-  const prevStep = () => {
+  const handlePrevStep = () => {
     if (step > 1) {
       let newStep = step - 1;
 
@@ -1229,13 +1242,16 @@ export default function BusinessQuiz() {
           <div className="flex w-full justify-between">
             <Button
               variant="outline"
-              onClick={loading ? () => {} : prevStep}
+              onClick={loading ? () => {} : handlePrevStep}
               disabled={step === 1 || loading}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
-            <Button disabled={loading} onClick={loading ? () => {} : nextStep}>
+            <Button
+              disabled={loading}
+              onClick={loading ? () => {} : handleNextStep}
+            >
               {step === totalSteps ? (
                 <>
                   Submit

@@ -331,6 +331,7 @@ export default function BusinessQuiz() {
       }
 
       const workerCreateFormData = new FormData();
+      workerCreateFormData.append("clientId", data.id);
 
       for (let i = 0; i < formData.products.length; i++) {
         workerCreateFormData.append(

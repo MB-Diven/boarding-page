@@ -10,6 +10,7 @@ import LoginPage from "./pages/Login";
 import DashboardLayout from "./pages/Dashboard/Layout";
 import DashboardPage from "./pages/Dashboard/Dashboard";
 import { createClient } from "@supabase/supabase-js";
+import { PostHogProvider } from "posthog-js/react";
 import ClientsPage from "./pages/Dashboard/Clients";
 import AppointmentsPage from "./pages/Dashboard/Appointments";
 import { Provider } from "react-redux";
@@ -62,8 +63,15 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <PostHogProvider
+      apiKey={process.env.REACT_APP_PUBLIC_POSTHOG_KEY!}
+      options={{
+        api_host: process.env.REACT_APP_PUBLIC_POSTHOG_HOST!,
+      }}
+    >
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </PostHogProvider>
   </StrictMode>,
 );

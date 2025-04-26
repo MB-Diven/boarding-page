@@ -133,7 +133,7 @@ export default function DashboardLayout() {
                 <Button variant="outline" size="sm" className="rounded-full">
                   <span className="sr-only">Open user menu</span>
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    JD
+                    DI
                   </span>
                 </Button>
               </DropdownMenuTrigger>

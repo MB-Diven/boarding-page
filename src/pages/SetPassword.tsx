@@ -78,10 +78,17 @@ export default function SetPasswordPage() {
       }
 
       console.log(data);
-      await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: data.email,
         password,
       });
+
+      if (signInError) {
+        toast.error("Error signing in", {
+          description: "There was a problem signing in. Please try again.",
+        });
+        return;
+      }
 
       toast("Password set successfully", {
         description:
@@ -89,7 +96,7 @@ export default function SetPasswordPage() {
       });
 
       // Redirect to login page or dashboard
-      navigate(data.url);
+      window.location.href = data.url;
     } catch (error) {
       toast.error("Error setting password", {
         description:

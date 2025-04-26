@@ -43,10 +43,18 @@ export default function LoginPage() {
     try {
       // In a real application, you would make an API call to authenticate
       // For demo purposes, we'll simulate a successful login
-      const { data } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+
+      if (error) {
+        toast.error("Login failed", {
+          description: "Invalid email or password. Please try again.",
+        });
+        setIsSubmitting(false);
+        return;
+      }
 
       console.log(data);
 

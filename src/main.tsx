@@ -7,6 +7,7 @@ import OnboardForm from "@/pages/OnboardForm";
 import Layout from "./pages/Layout";
 import SetPasswordPage from "./pages/SetPassword";
 import LoginPage from "./pages/Login";
+import DashboardPage from "./pages/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
         path: "login",
         Component: LoginPage,
       },
+      {
+        path: "dashboard",
+        Component: DashboardPage,
+      },
     ],
   },
 ]);
@@ -33,5 +38,5 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>
+  </StrictMode>,
 );

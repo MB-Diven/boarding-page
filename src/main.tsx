@@ -7,7 +7,8 @@ import OnboardForm from "@/pages/OnboardForm";
 import Layout from "./pages/Layout";
 import SetPasswordPage from "./pages/SetPassword";
 import LoginPage from "./pages/Login";
-import DashboardPage from "./pages/Dashboard";
+import DashboardLayout from "./pages/Dashboard/Layout";
+import DashboardPage from "./pages/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -27,10 +28,15 @@ const router = createBrowserRouter([
         path: "login",
         Component: LoginPage,
       },
+    ],
+  },
+  {
+    path: "dashboard",
+    Component: DashboardLayout,
+    children: [
       {
-        path: "dashboard",
+        index: true,
         Component: DashboardPage,
-        children: [],
       },
     ],
   },

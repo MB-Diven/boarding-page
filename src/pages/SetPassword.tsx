@@ -78,6 +78,10 @@ export default function SetPasswordPage() {
       }
 
       console.log(data);
+      await supabase.auth.signInWithPassword({
+        email: data.email,
+        password,
+      });
 
       toast("Password set successfully", {
         description:

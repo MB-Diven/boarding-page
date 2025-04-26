@@ -92,7 +92,7 @@ export default function BusinessQuiz() {
     worksAlone: false,
     workers: [] as Worker[],
     products: [] as Product[],
-    contactEmail: "",
+    email: "",
     contactPhone: "",
     additionalFeatures: [] as string[],
   });
@@ -1104,13 +1104,13 @@ export default function BusinessQuiz() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="contactEmail">Business Email</Label>
+                <Label htmlFor="email">Business Email</Label>
                 <Input
-                  id="contactEmail"
-                  name="contactEmail"
+                  id="email"
+                  name="email"
                   type="email"
                   placeholder="email@yourbusiness.com"
-                  value={formData.contactEmail}
+                  value={formData.email}
                   onChange={handleInputChange}
                 />
               </div>

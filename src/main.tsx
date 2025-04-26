@@ -10,6 +10,8 @@ import LoginPage from "./pages/Login";
 import DashboardLayout from "./pages/Dashboard/Layout";
 import DashboardPage from "./pages/Dashboard/Dashboard";
 import { createClient } from "@supabase/supabase-js";
+import ClientsPage from "./pages/Dashboard/Clients";
+import AppointmentsPage from "./pages/Dashboard/Appointments";
 
 export const supabase = createClient(
   "https://xmfozbvukwgcisiiwnkf.supabase.co",
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: DashboardPage,
+      },
+      {
+        path: "clients",
+        Component: ClientsPage,
+      },
+      {
+        path: "appointments",
+        Component: AppointmentsPage,
       },
     ],
   },

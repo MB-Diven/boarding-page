@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Check,
   CheckCircle2,
-  Dessert,
   Loader,
   Plus,
   Trash2,
@@ -44,7 +43,6 @@ import PhoneInput, {
   parsePhoneNumber,
 } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { Worker } from "node:worker_threads";
 
 const businessTypes = [
   "Equipment Rental",
@@ -328,6 +326,7 @@ export default function BusinessQuiz() {
         toast.error("Something went wrong!", {
           description: "Please try again later.",
         });
+        setLoading(false);
       }
 
       const workerCreateFormData = new FormData();
@@ -337,7 +336,7 @@ export default function BusinessQuiz() {
         workerCreateFormData.append(
           "products",
           JSON.stringify({
-            name: formData.products[i].image,
+            name: formData.products[i].name,
             price: formData.products[i].price,
             description: formData.products[i].description,
             id: formData.products[i].id,
@@ -351,13 +350,16 @@ export default function BusinessQuiz() {
       }
 
       for (let i = 0; i < formData.workers.length; i++) {
+        console.log(formData.workers[i]);
         workerCreateFormData.append(
           "workers",
           JSON.stringify({
             name: formData.workers[i].name,
             id: formData.workers[i].id,
             contact: formData.workers[i].contact,
-            services: formData.workers[i].services,
+            services: formData.workers[i].services.map(
+              (service: string) => +service,
+            ),
           }),
         );
       }
@@ -602,144 +604,6 @@ export default function BusinessQuiz() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Team Section */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="worksAlone"
-                      checked={formData.worksAlone}
-                      onCheckedChange={handleWorksAloneChange}
-                    />
-                    <Label htmlFor="worksAlone" className="font-medium">
-                      I work alone (no additional team members)
-                    </Label>
-                  </div>
-
-                  {!formData.worksAlone && (
-                    <div className="space-y-4 pt-2">
-                      <h3 className="text-sm font-medium">Team Members</h3>
-
-                      {/* List of added workers */}
-                      {formData.workers.length > 0 && (
-                        <div className="space-y-3 mb-4">
-                          {formData.workers.map((worker) => (
-                            <div
-                              key={worker.id}
-                              className="flex items-start justify-between p-3 border rounded-md bg-muted/50"
-                            >
-                              <div className="space-y-1">
-                                <p className="font-medium">{worker.name}</p>
-                                <p className="text-sm text-muted-foreground">
-                                  {worker.contact}
-                                </p>
-                                {worker.services.length > 0 && (
-                                  <div className="text-sm">
-                                    <span>Services: </span>
-                                    <span>
-                                      {worker.services
-                                        .map((serviceId) => {
-                                          const service =
-                                            formData.products.find(
-                                              (p) => p.id === serviceId,
-                                            );
-                                          return service ? service.name : "";
-                                        })
-                                        .filter(Boolean)
-                                        .join(", ")}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => removeWorker(worker.id)}
-                              >
-                                <Trash2 className="h-4 w-4 text-muted-foreground" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Add worker form */}
-                      <div className="space-y-3 p-4 border rounded-md">
-                        <h4 className="text-sm font-medium">Add Team Member</h4>
-                        <div className="space-y-3">
-                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <div className="space-y-1">
-                              <Label htmlFor="workerName">Full Name</Label>
-                              <Input
-                                id="workerName"
-                                name="name"
-                                placeholder="John Doe"
-                                value={newWorker.name}
-                                onChange={handleNewWorkerChange}
-                              />
-                            </div>
-                            <div className="space-y-1">
-                              <Label htmlFor="workerContact">
-                                Contact (Email/Phone)
-                              </Label>
-                              <Input
-                                id="workerContact"
-                                name="contact"
-                                placeholder="email@example.com"
-                                value={newWorker.contact}
-                                onChange={handleNewWorkerChange}
-                              />
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <Label>Services Provided</Label>
-                            <div className="border rounded-md p-3 max-h-[200px] overflow-y-auto">
-                              {formData.products.length === 0 ? (
-                                <p className="text-sm text-muted-foreground">
-                                  Add services first to assign them to team
-                                  members
-                                </p>
-                              ) : (
-                                <div className="space-y-2">
-                                  {formData.products.map((service) => (
-                                    <div
-                                      key={service.id}
-                                      className="flex items-center space-x-2"
-                                    >
-                                      <Checkbox
-                                        id={`service-${service.id}`}
-                                        checked={newWorker.services.includes(
-                                          service.id,
-                                        )}
-                                        onCheckedChange={() =>
-                                          handleWorkerServiceToggle(service.id)
-                                        }
-                                      />
-                                      <Label
-                                        htmlFor={`service-${service.id}`}
-                                        className="text-sm cursor-pointer flex-1"
-                                      >
-                                        {service.name}
-                                      </Label>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <Button
-                            type="button"
-                            onClick={addWorker}
-                            className="w-full sm:w-auto"
-                          >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add Team Member
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
                 {/* Services Section */}
                 <div className="space-y-4 pt-2">
                   <h3 className="text-sm font-medium">Services</h3>
@@ -892,6 +756,144 @@ export default function BusinessQuiz() {
                       </Button>
                     </div>
                   </div>
+                </div>
+
+                {/* Team Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="worksAlone"
+                      checked={formData.worksAlone}
+                      onCheckedChange={handleWorksAloneChange}
+                    />
+                    <Label htmlFor="worksAlone" className="font-medium">
+                      I work alone (no additional team members)
+                    </Label>
+                  </div>
+
+                  {!formData.worksAlone && (
+                    <div className="space-y-4 pt-2">
+                      <h3 className="text-sm font-medium">Team Members</h3>
+
+                      {/* List of added workers */}
+                      {formData.workers.length > 0 && (
+                        <div className="space-y-3 mb-4">
+                          {formData.workers.map((worker) => (
+                            <div
+                              key={worker.id}
+                              className="flex items-start justify-between p-3 border rounded-md bg-muted/50"
+                            >
+                              <div className="space-y-1">
+                                <p className="font-medium">{worker.name}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {worker.contact}
+                                </p>
+                                {worker.services.length > 0 && (
+                                  <div className="text-sm">
+                                    <span>Services: </span>
+                                    <span>
+                                      {worker.services
+                                        .map((serviceId) => {
+                                          const service =
+                                            formData.products.find(
+                                              (p) => p.id === serviceId,
+                                            );
+                                          return service ? service.name : "";
+                                        })
+                                        .filter(Boolean)
+                                        .join(", ")}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeWorker(worker.id)}
+                              >
+                                <Trash2 className="h-4 w-4 text-muted-foreground" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Add worker form */}
+                      <div className="space-y-3 p-4 border rounded-md">
+                        <h4 className="text-sm font-medium">Add Team Member</h4>
+                        <div className="space-y-3">
+                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            <div className="space-y-1">
+                              <Label htmlFor="workerName">Full Name</Label>
+                              <Input
+                                id="workerName"
+                                name="name"
+                                placeholder="John Doe"
+                                value={newWorker.name}
+                                onChange={handleNewWorkerChange}
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label htmlFor="workerContact">
+                                Contact (Email/Phone)
+                              </Label>
+                              <Input
+                                id="workerContact"
+                                name="contact"
+                                placeholder="email@example.com"
+                                value={newWorker.contact}
+                                onChange={handleNewWorkerChange}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Services Provided</Label>
+                            <div className="border rounded-md p-3 max-h-[200px] overflow-y-auto">
+                              {formData.products.length === 0 ? (
+                                <p className="text-sm text-muted-foreground">
+                                  Add services first to assign them to team
+                                  members
+                                </p>
+                              ) : (
+                                <div className="space-y-2">
+                                  {formData.products.map((service) => (
+                                    <div
+                                      key={service.id}
+                                      className="flex items-center space-x-2"
+                                    >
+                                      <Checkbox
+                                        id={`service-${service.id}`}
+                                        checked={newWorker.services.includes(
+                                          service.id,
+                                        )}
+                                        onCheckedChange={() =>
+                                          handleWorkerServiceToggle(service.id)
+                                        }
+                                      />
+                                      <Label
+                                        htmlFor={`service-${service.id}`}
+                                        className="text-sm cursor-pointer flex-1"
+                                      >
+                                        {service.name}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            onClick={addWorker}
+                            className="w-full sm:w-auto"
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add Team Member
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </>

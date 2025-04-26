@@ -11,7 +11,7 @@ import {
   Star,
   Users,
 } from "lucide-react";
-import HeroImage from "../assets/hero.svg";
+import HeroImage from "../assets/hero.png";
 import { Badge } from "@/components/ui/badge";
 
 const LandingPage = () => {

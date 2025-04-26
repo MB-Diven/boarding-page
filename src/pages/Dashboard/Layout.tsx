@@ -36,10 +36,13 @@ import {
 import divenLogo from "../../assets/logo_big.svg";
 import divenLogoSmall from "../../assets/logo_small.svg";
 import { supabase } from "@/main";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/userSlice";
 
 export default function DashboardLayout() {
   const pathname = window.location.pathname;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const routes = [
@@ -89,10 +92,23 @@ export default function DashboardLayout() {
     supabase.auth
       .getUser()
       .then((response) => {
-        if (response.error) {
+        if (response.error || !response?.data?.user?.email) {
           console.error("Error fetching user:", response.error);
           navigate("/");
         }
+
+        return supabase
+          .from("client")
+          .select("*")
+          .eq("email", response?.data?.user?.email)
+          .single();
+      })
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Error fetching client:", error);
+        }
+
+        dispatch(setUser(data));
       })
       .catch(() => {
         navigate("/");

@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Calendar,
-  MoreHorizontal,
-  Search,
-  Trash2,
-  UserPlus,
-} from "lucide-react";
+import { Calendar, MoreHorizontal, Search, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {

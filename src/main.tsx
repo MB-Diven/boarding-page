@@ -12,6 +12,8 @@ import DashboardPage from "./pages/Dashboard/Dashboard";
 import { createClient } from "@supabase/supabase-js";
 import ClientsPage from "./pages/Dashboard/Clients";
 import AppointmentsPage from "./pages/Dashboard/Appointments";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 export const supabase = createClient(
   "https://xmfozbvukwgcisiiwnkf.supabase.co",
@@ -60,6 +62,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 );

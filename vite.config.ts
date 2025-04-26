@@ -10,6 +10,8 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     define: {
       "process.env.SUPABASE_ANON_KEY": JSON.stringify(env.SUPABASE_ANON_KEY),
+      "process.env.VITE_POSTHOG_KEY": JSON.stringify(env.VITE_POSTHOG_KEY),
+      "process.env.VITE_POSTHOG_HOST": JSON.stringify(env.VITE_POSTHOG_HOST),
     },
     resolve: {
       alias: {

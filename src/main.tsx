@@ -64,9 +64,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PostHogProvider
-      apiKey={process.env.REACT_APP_PUBLIC_POSTHOG_KEY!}
+      apiKey={process.env.VITE_POSTHOG_KEY!}
       options={{
-        api_host: process.env.REACT_APP_PUBLIC_POSTHOG_HOST!,
+        api_host: process.env.VITE_POSTHOG_HOST!,
       }}
     >
       <Provider store={store}>

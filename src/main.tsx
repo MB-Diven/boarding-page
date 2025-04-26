@@ -9,6 +9,12 @@ import SetPasswordPage from "./pages/SetPassword";
 import LoginPage from "./pages/Login";
 import DashboardLayout from "./pages/Dashboard/Layout";
 import DashboardPage from "./pages/Dashboard/Dashboard";
+import { createClient } from "@supabase/supabase-js";
+
+export const supabase = createClient(
+  "https://xmfozbvukwgcisiiwnkf.supabase.co",
+  process.env.SUPABASE_ANON_KEY ?? "",
+);
 
 const router = createBrowserRouter([
   {

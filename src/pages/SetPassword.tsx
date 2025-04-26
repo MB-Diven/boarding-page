@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router";
-import { supabase } from "./Layout";
+import { supabase } from "@/main";
 
 export default function SetPasswordPage() {
   const [password, setPassword] = useState("");

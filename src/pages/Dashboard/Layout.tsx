@@ -1,9 +1,9 @@
 "use client";
 
 import type React from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart3,
   Calendar,
@@ -38,9 +38,11 @@ import {
 
 import divenLogo from "../../assets/logo_big.svg";
 import divenLogoSmall from "../../assets/logo_small.svg";
+import { supabase } from "@/main";
 
 export default function DashboardLayout() {
   const pathname = window.location.pathname;
+  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const routes = [
@@ -86,16 +88,31 @@ export default function DashboardLayout() {
     },
   ];
 
+  useEffect(() => {
+    supabase.auth
+      .getUser()
+      .then((response) => {
+        if (response.error) {
+          console.error("Error fetching user:", response.error);
+          navigate("/");
+        }
+      })
+      .catch(() => {
+        navigate("/");
+      });
+  }, []);
+
   return (
     <SidebarProvider defaultOpen={!isCollapsed} onOpenChange={setIsCollapsed}>
       <div className="flex min-h-screen w-full flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
           <a
             href="/dashboard"
-            className="hidden md:flex items-center max-h-[50px] max-w-[125px] space-x-2"
+            className="hidden overflow-hidden md:flex items-center max-h-[50px] max-w-[125px] space-x-2"
           >
             <img
               width={500}
+              height={200}
               className="object-cover w-[550px] h-[200px]"
               src={divenLogo}
               alt="Diven logo"
@@ -103,7 +120,7 @@ export default function DashboardLayout() {
           </a>
           <a
             href="/dashboard"
-            className="flex md:hidden max-w-[50px] object-cover max-h-[50px] items-center space-x-2"
+            className="flex overflow-hidden md:hidden max-w-[50px] object-cover max-h-[50px] items-center space-x-2"
           >
             <img
               width={125}
@@ -115,7 +132,7 @@ export default function DashboardLayout() {
           </a>
           <div className="ml-auto flex items-center gap-4">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger className="p-0" asChild>
                 <Button variant="outline" size="sm" className="rounded-full">
                   <span className="sr-only">Open user menu</span>
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -171,7 +188,14 @@ export default function DashboardLayout() {
                   className="w-full justify-start"
                   asChild
                 >
-                  <a href="/">
+                  <a
+                    href="#"
+                    onClick={() => {
+                      supabase.auth.signOut().then(() => {
+                        navigate("/");
+                      });
+                    }}
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Back to Website</span>
                   </a>

@@ -36,13 +36,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { supabase } from "./Layout";
 
 import PhoneInput, {
   type Value,
   parsePhoneNumber,
 } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { supabase } from "@/main";
 
 const businessTypes = [
   "Equipment Rental",

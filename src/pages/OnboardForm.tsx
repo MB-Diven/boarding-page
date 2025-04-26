@@ -373,6 +373,9 @@ export default function BusinessQuiz() {
       if (workerError) {
         console.error("Error creating workers:", workerError);
         setLoading(false);
+        toast.error("Error creating workers", {
+          description: "Please contact support or try again later.",
+        });
         return;
       }
 

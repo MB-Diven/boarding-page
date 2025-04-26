@@ -9,7 +9,6 @@ import {
   Edit2,
   MapPin,
   Plus,
-  Search,
   Trash2,
   User,
 } from "lucide-react";
@@ -183,7 +182,6 @@ export default function AppointmentsPage() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date(),
   );
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedAppointment, setSelectedAppointment] = useState<any | null>(
     null,
   );
@@ -206,14 +204,6 @@ export default function AppointmentsPage() {
         isSameDay(appointment.date, selectedDate),
       )
     : [];
-
-  // Filter appointments by search query
-  const searchedAppointments = appointments.filter(
-    (appointment) =>
-      appointment.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      appointment.service.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      appointment.worker.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
 
   // Handle view appointment
   const handleViewAppointment = (appointment: any) => {
@@ -345,16 +335,6 @@ export default function AppointmentsPage() {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="relative w-full max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Ieškoti rezervacijų..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
         <Button onClick={handleNewAppointment}>
           <Plus className="mr-2 h-4 w-4" />
           Nauja rezervacija
@@ -442,7 +422,7 @@ export default function AppointmentsPage() {
               {/* Appointments area */}
               <div className="ml-16 relative">
                 {/* Hour grid lines */}
-                {dayViewTimeSlots.map((slot, index) => (
+                {dayViewTimeSlots.map((_, index) => (
                   <div
                     key={index}
                     className="h-20 border-b last:border-b-0"

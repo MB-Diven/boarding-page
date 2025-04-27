@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import {
   BarChart3,
   Calendar,
-  CreditCard,
   LayoutDashboard,
   LogOut,
   Package,
@@ -75,11 +74,6 @@ export default function DashboardLayout() {
       title: "Appointments",
       href: "/dashboard/appointments",
       icon: Calendar,
-    },
-    {
-      title: "Payments",
-      href: "/dashboard/payments",
-      icon: CreditCard,
     },
     {
       title: "Settings",

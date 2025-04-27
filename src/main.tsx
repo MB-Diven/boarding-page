@@ -15,6 +15,10 @@ import ClientsPage from "./pages/Dashboard/Clients";
 import AppointmentsPage from "./pages/Dashboard/Appointments";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
+import ProductsPage from "./pages/Dashboard/Products";
+import WorkersPage from "./pages/Dashboard/Workers";
+import AnalyticsPage from "./pages/Dashboard/Analytics";
+import SettingsPage from "./pages/Dashboard/Settings";
 
 export const supabase = createClient(
   "https://xmfozbvukwgcisiiwnkf.supabase.co",
@@ -56,6 +60,22 @@ const router = createBrowserRouter([
       {
         path: "appointments",
         Component: AppointmentsPage,
+      },
+      {
+        path: "products",
+        Component: ProductsPage,
+      },
+      {
+        path: "workers",
+        Component: WorkersPage,
+      },
+      {
+        path: "analytics",
+        Component: AnalyticsPage,
+      },
+      {
+        path: "settings",
+        Component: SettingsPage,
       },
     ],
   },

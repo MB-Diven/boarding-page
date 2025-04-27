@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { format, isSameDay } from "date-fns";
 import { lt } from "date-fns/locale";

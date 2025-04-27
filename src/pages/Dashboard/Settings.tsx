@@ -43,8 +43,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router";
 
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
@@ -334,7 +336,7 @@ export default function SettingsPage() {
                 </Select>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex items-center flex-wrap gap-2">
               <Button onClick={handleSaveSettings} disabled={saving}>
                 {saving ? (
                   <>Išsaugoma...</>
@@ -349,6 +351,13 @@ export default function SettingsPage() {
                     Išsaugoti pakeitimus
                   </>
                 )}
+              </Button>
+              <Button
+                onClick={() => navigate("/cancel-subscription")}
+                disabled={saving}
+                variant="destructive"
+              >
+                Nutraukti abonementą
               </Button>
             </CardFooter>
           </Card>

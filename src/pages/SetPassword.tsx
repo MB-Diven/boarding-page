@@ -79,7 +79,7 @@ export default function SetPasswordPage() {
 
       console.log(data);
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: data.email,
+        email: data.user.email,
         password,
       });
 

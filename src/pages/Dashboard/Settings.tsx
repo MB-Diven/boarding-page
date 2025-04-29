@@ -44,8 +44,12 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { supabase } from "@/main";
+import { RootState } from "@/store/store";
 
 export default function SettingsPage() {
+  const { user } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -60,11 +64,11 @@ export default function SettingsPage() {
   // Business settings state
   const [businessName, setBusinessName] = useState("Elegance Salon");
   const [businessEmail, setBusinessEmail] = useState(
-    "contact@elegancesalon.com",
+    "contact@elegancesalon.com"
   );
   const [businessPhone, setBusinessPhone] = useState("+370 612 34567");
   const [businessAddress, setBusinessAddress] = useState(
-    "Vilniaus g. 123, Vilnius",
+    "Vilniaus g. 123, Vilnius"
   );
 
   // Domain settings state
@@ -77,10 +81,10 @@ export default function SettingsPage() {
 
   // Content settings state
   const [welcomeMessage, setWelcomeMessage] = useState(
-    "Sveiki atvykę į Elegance Salon!",
+    "Sveiki atvykę į Elegance Salon!"
   );
   const [businessDescription, setBusinessDescription] = useState(
-    "Mes teikiame aukščiausios kokybės grožio paslaugas, kad jūs jaustumėtės ir atrodytumėte geriausiai.",
+    "Mes teikiame aukščiausios kokybės grožio paslaugas, kad jūs jaustumėtės ir atrodytumėte geriausiai."
   );
 
   const handleSaveSettings = () => {
@@ -122,21 +126,28 @@ export default function SettingsPage() {
   };
 
   const handleDeploySite = () => {
-    setDeploymentStatus("deploying");
-
-    // Simulate deployment process
-    setTimeout(() => {
-      setDeploymentStatus("success");
-
-      // Reset status after some time
-      setTimeout(() => {
-        setDeploymentDialogOpen(false);
-        // Keep success status visible for a while after closing
-        setTimeout(() => {
-          setDeploymentStatus("idle");
-        }, 2000);
-      }, 3000);
-    }, 5000);
+    if (!user) return;
+    supabase.functions
+      .invoke("deploy-site", {
+        method: "POST",
+        body: {
+          baseDomain: "diven.lt",
+          subdomain: user.businessName,
+          clientId: user.id,
+          sourceRepo: "MB-Diven/beauty_salon_boilerplate",
+          githubUsername: "",
+          forkName: `${user.businessName
+            .toLowerCase()
+            .replace(/ /g, "-")}.diven.lt`,
+        },
+      })
+      .then(({ data }) => {
+        if (data.success) {
+          setDeploymentStatus("success");
+        } else {
+          setDeploymentStatus("error");
+        }
+      });
   };
 
   return (

@@ -170,10 +170,7 @@ export default function DashboardLayout() {
         <div className="flex flex-1">
           <Sidebar>
             <SidebarHeader>
-              <div className="flex items-center gap-2 px-4 py-2">
-                <Store className="h-6 w-6" />
-                <span className="text-lg font-semibold">Elegance Salon</span>
-              </div>
+              <div className="flex items-center gap-2 px-4 py-7"></div>
             </SidebarHeader>
             <SidebarContent>
               <SidebarMenu>

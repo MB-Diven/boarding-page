@@ -45,8 +45,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
-import { supabase } from "@/main";
 import { RootState } from "@/store/store";
+import supabase from "@/lib/supabase";
 
 export default function SettingsPage() {
   const { user } = useSelector((state: RootState) => state.user);

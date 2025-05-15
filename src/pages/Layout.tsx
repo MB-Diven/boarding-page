@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { useEffect } from "react";
 import axios from "axios";
-import { supabase } from "@/main";
+import supabase from "@/lib/supabase";
 
 export default function Layout() {
   const navigate = useNavigate();

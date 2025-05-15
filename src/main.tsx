@@ -9,7 +9,6 @@ import SetPasswordPage from "./pages/SetPassword";
 import LoginPage from "./pages/Login";
 import DashboardLayout from "./pages/Dashboard/Layout";
 import DashboardPage from "./pages/Dashboard/Dashboard";
-import { createClient } from "@supabase/supabase-js";
 import { PostHogProvider } from "posthog-js/react";
 import ClientsPage from "./pages/Dashboard/Clients";
 import AppointmentsPage from "./pages/Dashboard/Appointments";
@@ -19,11 +18,6 @@ import ProductsPage from "./pages/Dashboard/Products";
 import WorkersPage from "./pages/Dashboard/Workers";
 import AnalyticsPage from "./pages/Dashboard/Analytics";
 import SettingsPage from "./pages/Dashboard/Settings";
-
-export const supabase = createClient(
-  "https://xmfozbvukwgcisiiwnkf.supabase.co",
-  process.env.SUPABASE_ANON_KEY ?? "",
-);
 
 const router = createBrowserRouter([
   {
@@ -84,14 +78,14 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <PostHogProvider
-      apiKey={process.env.VITE_POSTHOG_KEY!}
+      apiKey={import.meta.env.VITE_POSTHOG_KEY!}
       options={{
-        api_host: process.env.VITE_POSTHOG_HOST!,
+        api_host: import.meta.env.VITE_POSTHOG_HOST!,
       }}
     >
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
     </PostHogProvider>
-  </StrictMode>,
+  </StrictMode>
 );

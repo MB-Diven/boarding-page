@@ -42,7 +42,7 @@ import PhoneInput, {
   parsePhoneNumber,
 } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { supabase } from "@/main";
+import supabase from "@/lib/supabase";
 
 const businessTypes = [
   "Equipment Rental",

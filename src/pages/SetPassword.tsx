@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router";
-import { supabase } from "@/main";
+import supabase from "@/lib/supabase";
 
 export default function SetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -66,7 +66,7 @@ export default function SetPasswordPage() {
             checkoutSessionId: searchParams.get("session_id"),
           },
           method: "POST",
-        },
+        }
       );
 
       if (error) {
@@ -177,7 +177,9 @@ export default function SetPasswordPage() {
               <ul className="space-y-1 text-sm">
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`h-4 w-4 ${hasMinLength ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${
+                      hasMinLength ? "text-primary" : "text-muted-foreground"
+                    }`}
                   />
                   <span
                     className={
@@ -189,7 +191,9 @@ export default function SetPasswordPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`h-4 w-4 ${hasUppercase ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${
+                      hasUppercase ? "text-primary" : "text-muted-foreground"
+                    }`}
                   />
                   <span
                     className={
@@ -201,7 +205,9 @@ export default function SetPasswordPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`h-4 w-4 ${hasLowercase ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${
+                      hasLowercase ? "text-primary" : "text-muted-foreground"
+                    }`}
                   />
                   <span
                     className={
@@ -213,7 +219,9 @@ export default function SetPasswordPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`h-4 w-4 ${hasNumber ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${
+                      hasNumber ? "text-primary" : "text-muted-foreground"
+                    }`}
                   />
                   <span
                     className={
@@ -225,7 +233,9 @@ export default function SetPasswordPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`h-4 w-4 ${hasSpecialChar ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${
+                      hasSpecialChar ? "text-primary" : "text-muted-foreground"
+                    }`}
                   />
                   <span
                     className={
@@ -239,7 +249,9 @@ export default function SetPasswordPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`h-4 w-4 ${passwordsMatch ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-4 w-4 ${
+                      passwordsMatch ? "text-primary" : "text-muted-foreground"
+                    }`}
                   />
                   <span
                     className={

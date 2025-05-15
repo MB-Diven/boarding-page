@@ -8,7 +8,6 @@ import {
   LogOut,
   Package,
   Settings,
-  Store,
   Users,
 } from "lucide-react";
 
@@ -34,9 +33,9 @@ import {
 
 import divenLogo from "../../assets/logo_big.svg";
 import divenLogoSmall from "../../assets/logo_small.svg";
-import { supabase } from "@/main";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/store/userSlice";
+import supabase from "@/lib/supabase";
 
 export default function DashboardLayout() {
   const pathname = window.location.pathname;

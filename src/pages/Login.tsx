@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { supabase } from "@/main";
+import supabase from "@/lib/supabase";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

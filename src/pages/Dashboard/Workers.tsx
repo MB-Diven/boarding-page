@@ -103,6 +103,7 @@ export default function WorkersPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>ID</TableHead>
               <TableHead>Vardas</TableHead>
               <TableHead>Kontaktai</TableHead>
               <TableHead>Klientai</TableHead>
@@ -114,6 +115,7 @@ export default function WorkersPage() {
           <TableBody>
             {filteredWorkers.map((worker) => (
               <TableRow key={worker.id}>
+                <TableCell>{worker.id}</TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-3">
                     <div className="relative h-10 w-10 overflow-hidden rounded-full">

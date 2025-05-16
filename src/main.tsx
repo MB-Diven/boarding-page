@@ -47,10 +47,10 @@ const router = createBrowserRouter([
         index: true,
         Component: DashboardPage,
       },
-      {
-        path: "clients",
-        Component: ClientsPage,
-      },
+      // {
+      //   path: "clients",
+      //   Component: ClientsPage,
+      // },
       {
         path: "appointments",
         Component: AppointmentsPage,

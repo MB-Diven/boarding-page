@@ -49,11 +49,11 @@ export default function DashboardLayout() {
       href: "/dashboard",
       icon: LayoutDashboard,
     },
-    {
-      title: "Clients",
-      href: "/dashboard/clients",
-      icon: Users,
-    },
+    // {
+    //   title: "Clients",
+    //   href: "/dashboard/clients",
+    //   icon: Users,
+    // },
     {
       title: "Products",
       href: "/dashboard/products",

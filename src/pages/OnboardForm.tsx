@@ -361,7 +361,6 @@ export default function BusinessQuiz() {
         );
       } else {
         for (let i = 0; i < formData.workers.length; i++) {
-          console.log(formData.workers[i]);
           workerCreateFormData.append(
             "workers",
             JSON.stringify({

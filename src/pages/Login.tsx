@@ -43,7 +43,7 @@ export default function LoginPage() {
     try {
       // In a real application, you would make an API call to authenticate
       // For demo purposes, we'll simulate a successful login
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -55,8 +55,6 @@ export default function LoginPage() {
         setIsSubmitting(false);
         return;
       }
-
-      console.log(data);
 
       toast("Login successful", {
         description: "Welcome back to your account.",

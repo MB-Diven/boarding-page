@@ -421,7 +421,7 @@ const LandingPage = () => {
               <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm">
                 <div className="flex items-center space-x-4">
                   <img
-                    src="/placeholder.jpg"
+                    src="/testimonial_1.png"
                     width="50"
                     height="50"
                     alt="Customer"
@@ -451,7 +451,7 @@ const LandingPage = () => {
               <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm">
                 <div className="flex items-center space-x-4">
                   <img
-                    src="/placeholder.jpg"
+                    src="/testimonial_2.png"
                     width="50"
                     height="50"
                     alt="Customer"
@@ -481,7 +481,7 @@ const LandingPage = () => {
               <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm">
                 <div className="flex items-center space-x-4">
                   <img
-                    src="/placeholder.jpg"
+                    src="/testimonial_3.jpeg"
                     width="50"
                     height="50"
                     alt="Customer"
@@ -490,7 +490,7 @@ const LandingPage = () => {
                   <div>
                     <h3 className="text-lg font-bold">Emma Rodriguez</h3>
                     <p className="text-sm text-muted-foreground">
-                      Party Equipment Rentals
+                      Beauty salon owner
                     </p>
                   </div>
                 </div>
@@ -502,10 +502,10 @@ const LandingPage = () => {
                   <Star className="h-5 w-5 fill-primary text-primary" />
                 </div>
                 <blockquote className="mt-4 text-muted-foreground">
-                  "Before Diven, I was spending hours managing bookings and
-                  inventory. Now everything is automated, and I can focus on
-                  growing my business. The customer support team is also
-                  fantastic and always ready to help."
+                  "Before Diven, I was spending hours managing bookings. Now
+                  everything is automated, and I can focus on growing my
+                  business. The customer support team is also fantastic and
+                  always ready to help."
                 </blockquote>
               </div>
             </div>

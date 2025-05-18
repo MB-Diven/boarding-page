@@ -10,7 +10,6 @@ import LoginPage from "./pages/Login";
 import DashboardLayout from "./pages/Dashboard/Layout";
 import DashboardPage from "./pages/Dashboard/Dashboard";
 import { PostHogProvider } from "posthog-js/react";
-import ClientsPage from "./pages/Dashboard/Clients";
 import AppointmentsPage from "./pages/Dashboard/Appointments";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
@@ -87,5 +86,5 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </Provider>
     </PostHogProvider>
-  </StrictMode>
+  </StrictMode>,
 );

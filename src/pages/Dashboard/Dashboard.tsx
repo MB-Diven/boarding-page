@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getReservationChangeFromPreviousMonth } from "@/lib/clients";
 import supabase from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardPage() {
   const { user } = useSelector((state: RootState) => state.user);
@@ -35,6 +36,7 @@ export default function DashboardPage() {
     sum: "0",
     percentageChange: "0",
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user) {
@@ -47,7 +49,7 @@ export default function DashboardPage() {
                 data.percentChange === "N/A" ? "0" : data.percentChange,
             });
           }
-        },
+        }
       );
 
       getReservationChangeFromPreviousMonth(user, "people").then((data) => {
@@ -78,9 +80,11 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Valdymo skydas</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          {t("dashboard.overview.title")}
+        </h1>
         <p className="text-muted-foreground">
-          Sveiki sugrįžę! Čia yra jūsų verslo veiklos apžvalga.
+          {t("dashboard.overview.welcome")}
         </p>
       </div>
 
@@ -88,7 +92,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-sm font-medium">
-              Bendras uždarbis
+              {t("dashboard.overview.totalRevenue")}
             </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -99,7 +103,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-sm font-medium">
-              Nauji klientai
+              {t("dashboard.overview.newClients")}
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -109,13 +113,15 @@ export default function DashboardPage() {
               <span className="text-emerald-500">
                 {newClients.percentageChange}%
               </span>{" "}
-              nuo preito mėnesio
+              {t("dashboard.overview.fromLastMonth")}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-medium">Rezervacijos</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("dashboard.overview.reservations")}
+            </CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -124,21 +130,22 @@ export default function DashboardPage() {
               <span className="text-emerald-500">
                 {rezervations.percentageChange}%
               </span>{" "}
-              nuo preito mėnesio
+              {t("dashboard.overview.fromLastMonth")}
             </p>
           </CardContent>
         </Card>
         <Card className="opacity-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-sm font-medium">
-              Produktų pardavimai
+              {t("dashboard.overview.productSales")}
             </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-rose-500">+0%</span> nuo preito mėnesio
+              <span className="text-rose-500">+0%</span>{" "}
+              {t("dashboard.overview.fromLastMonth")}
             </p>
           </CardContent>
         </Card>
@@ -146,16 +153,26 @@ export default function DashboardPage() {
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="overview">
+            {t("dashboard.overview.overview")}
+          </TabsTrigger>
+          <TabsTrigger value="analytics">
+            {t("dashboard.overview.analytics")}
+          </TabsTrigger>
+          <TabsTrigger value="reports">
+            {t("dashboard.overview.reports")}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="lg:col-span-4">
               <CardHeader>
-                <CardTitle>Recent Appointments</CardTitle>
-                <CardDescription>Latest client bookings</CardDescription>
+                <CardTitle>
+                  {t("dashboard.overview.recentAppointments")}
+                </CardTitle>
+                <CardDescription>
+                  {t("dashboard.overview.latestBookings")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -203,7 +220,7 @@ export default function DashboardPage() {
                       <div className="ml-auto text-right">
                         <p className="text-sm">{appointment.date}</p>
                         <p className="text-xs text-muted-foreground">
-                          with {appointment.stylist}
+                          {t("dashboard.overview.with")} {appointment.stylist}
                         </p>
                       </div>
                     </div>
@@ -213,7 +230,7 @@ export default function DashboardPage() {
               <CardFooter>
                 <Button variant="outline" className="w-full" asChild>
                   <a href="/dashboard/appointments">
-                    View all appointments
+                    {t("dashboard.overview.viewAllAppointments")}
                     <ArrowUpRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
@@ -221,8 +238,10 @@ export default function DashboardPage() {
             </Card>
             <Card className="lg:col-span-3">
               <CardHeader>
-                <CardTitle>Top Performers</CardTitle>
-                <CardDescription>Your best workers this month</CardDescription>
+                <CardTitle>{t("dashboard.overview.topPerformers")}</CardTitle>
+                <CardDescription>
+                  {t("dashboard.overview.bestWorkers")}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -276,9 +295,9 @@ export default function DashboardPage() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="lg:col-span-3">
               <CardHeader>
-                <CardTitle>Popular Products</CardTitle>
+                <CardTitle>{t("dashboard.overview.popularProducts")}</CardTitle>
                 <CardDescription>
-                  Your best selling products this month
+                  {t("dashboard.overview.bestSelling")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -317,7 +336,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="ml-auto text-right">
                         <p className="text-sm font-medium">
-                          {product.sales} sold
+                          {product.sales} {t("dashboard.overview.sold")}
                         </p>
                         <p className="text-xs text-emerald-500">
                           {product.growth}
@@ -330,11 +349,11 @@ export default function DashboardPage() {
             </Card>
             <Card className="lg:col-span-4">
               <CardHeader>
-                <CardTitle>Revenue Overview</CardTitle>
+                <CardTitle>{t("dashboard.overview.revenueOverview")}</CardTitle>
               </CardHeader>
               <CardContent className="pl-2">
                 <div className="h-[240px] w-full bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground">
-                  Revenue Chart
+                  {t("dashboard.overview.revenueChart")}
                 </div>
               </CardContent>
             </Card>
@@ -343,14 +362,14 @@ export default function DashboardPage() {
         <TabsContent value="analytics" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Analytics</CardTitle>
+              <CardTitle>{t("dashboard.overview.analyticsTitle")}</CardTitle>
               <CardDescription>
-                Detailed performance metrics for your business
+                {t("dashboard.overview.analyticsDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[400px] w-full bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground">
-                Analytics Dashboard Content
+                {t("dashboard.overview.analyticsDashboard")}
               </div>
             </CardContent>
           </Card>
@@ -358,14 +377,14 @@ export default function DashboardPage() {
         <TabsContent value="reports" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Reports</CardTitle>
+              <CardTitle>{t("dashboard.overview.reportsTitle")}</CardTitle>
               <CardDescription>
-                Download and view business reports
+                {t("dashboard.overview.reportsDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[400px] w-full bg-muted/20 rounded-md flex items-center justify-center text-muted-foreground">
-                Reports Dashboard Content
+                {t("dashboard.overview.reportsDashboard")}
               </div>
             </CardContent>
           </Card>

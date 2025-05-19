@@ -43,6 +43,7 @@ import PhoneInput, {
 } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import supabase from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 const businessTypes = [
   "Equipment Rental",
@@ -79,6 +80,7 @@ export default function BusinessQuiz() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({
     businessName: "",
@@ -127,7 +129,7 @@ export default function BusinessQuiz() {
   }, [step, totalSteps]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -182,14 +184,14 @@ export default function BusinessQuiz() {
   };
 
   const handleNewWorkerChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setNewWorker((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleNewProductChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({ ...prev, [name]: value }));
@@ -218,15 +220,15 @@ export default function BusinessQuiz() {
   // Update the addProduct function to reset the image fields
   const addProduct = () => {
     if (!newProduct.name || !newProduct.price) {
-      toast.error("Missing information", {
-        description: "Please provide at least the product name and price.",
+      toast.error(t("onboard.step3Salon.missingInfo"), {
+        description: t("onboard.step3Salon.missingInfoDesc"),
       });
       return;
     }
 
     if (!newProduct.image.size) {
-      toast.error("Missing image", {
-        description: "Please provide an image for the product.",
+      toast.error(t("onboard.step3Salon.missingImage"), {
+        description: t("onboard.step3Salon.missingImageDesc"),
       });
       return;
     }
@@ -267,24 +269,32 @@ export default function BusinessQuiz() {
 
   const handleNextStep = async () => {
     if (step === 1 && !formData.businessName) {
-      toast.error("Business name required", {
-        description: "Please enter your business name to continue.",
-      });
+      toast.error(
+        t("onboard.step1.businessName") + " " + t("onboard.navigation.error"),
+        {
+          description: t("onboard.step1.businessNamePlaceholder"),
+        }
+      );
       return;
     }
 
     if (step === 3 && !isBeautySalon && !formData.inventorySize) {
-      toast.error("Inventory information required", {
-        description: "Please select your inventory size to continue.",
-      });
-
+      toast.error(
+        t("onboard.step3.title") + " " + t("onboard.navigation.error"),
+        {
+          description: t("onboard.step3.selectInventorySize"),
+        }
+      );
       return;
     }
 
     if (step === 3 && isBeautySalon && formData.products.length === 0) {
-      toast.error("Services required", {
-        description: "Please add at least one service that you offer.",
-      });
+      toast.error(
+        t("onboard.step3Salon.title") + " " + t("onboard.navigation.error"),
+        {
+          description: t("onboard.step3Salon.missingInfoDesc"),
+        }
+      );
       return;
     }
 
@@ -292,8 +302,8 @@ export default function BusinessQuiz() {
 
     if (newStep > totalSteps) {
       setLoading(true);
-      toast("Quiz completed!", {
-        description: "Please wait while we process your information.",
+      toast(t("onboard.navigation.completeQuiz"), {
+        description: t("onboard.navigation.processingInfo"),
       });
 
       const body = new FormData();
@@ -307,7 +317,7 @@ export default function BusinessQuiz() {
         ) {
           body.append(
             key,
-            value instanceof File ? value : JSON.stringify(value),
+            value instanceof File ? value : JSON.stringify(value)
           );
         }
       });
@@ -319,13 +329,13 @@ export default function BusinessQuiz() {
         {
           body,
           method: "POST",
-        },
+        }
       );
 
       if (error) {
         console.error("Err: ", error);
-        toast.error("Something went wrong!", {
-          description: "Please try again later.",
+        toast.error(t("onboard.navigation.error"), {
+          description: t("onboard.navigation.errorDesc"),
         });
         setLoading(false);
       }
@@ -341,12 +351,12 @@ export default function BusinessQuiz() {
             price: formData.products[i].price,
             description: formData.products[i].description,
             id: formData.products[i].id,
-          }),
+          })
         );
 
         workerCreateFormData.append(
           "productImages",
-          formData.products[i].image,
+          formData.products[i].image
         );
       }
 
@@ -358,7 +368,7 @@ export default function BusinessQuiz() {
             id: Date.now().toString(),
             contact: formData.contactPhone,
             services: formData.products.map((product) => +product.id),
-          }),
+          })
         );
       } else {
         for (let i = 0; i < formData.workers.length; i++) {
@@ -369,9 +379,9 @@ export default function BusinessQuiz() {
               id: formData.workers[i].id,
               contact: formData.workers[i].contact,
               services: formData.workers[i].services.map(
-                (service: string) => +service,
+                (service: string) => +service
               ),
-            }),
+            })
           );
         }
       }
@@ -385,8 +395,8 @@ export default function BusinessQuiz() {
       if (workerError) {
         console.error("Error creating workers:", workerError);
         setLoading(false);
-        toast.error("Error creating workers", {
-          description: "Please contact support or try again later.",
+        toast.error(t("onboard.navigation.error"), {
+          description: t("onboard.navigation.errorDesc"),
         });
         return;
       }
@@ -439,9 +449,8 @@ export default function BusinessQuiz() {
   // Update the addWorker function to handle the new services array
   const addWorker = () => {
     if (!newWorker.name || !newWorker.contact) {
-      toast.error("Missing information", {
-        description:
-          "Please provide at least the worker's name and contact information.",
+      toast.error(t("onboard.step4.missingInfo"), {
+        description: t("onboard.step4.missingInfoDesc"),
       });
       return;
     }
@@ -478,25 +487,29 @@ export default function BusinessQuiz() {
         return (
           <>
             <CardHeader>
-              <CardTitle>Business Basics</CardTitle>
+              <CardTitle>{t("onboard.step1.title")}</CardTitle>
               <CardDescription>
-                Let's start with some basic information about your business
+                {t("onboard.step1.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="businessName">Business Name</Label>
+                <Label htmlFor="businessName">
+                  {t("onboard.step1.businessName")}
+                </Label>
                 <Input
                   id="businessName"
                   name="businessName"
-                  placeholder="Enter your business name"
+                  placeholder={t("onboard.step1.businessNamePlaceholder")}
                   value={formData.businessName}
                   onChange={handleInputChange}
                 />
               </div>
 
               <div className="space-y-2 grow">
-                <Label htmlFor="businessType">Business Type</Label>
+                <Label htmlFor="businessType">
+                  {t("onboard.step1.businessType")}
+                </Label>
                 <Select
                   value={formData.businessType}
                   onValueChange={(value) =>
@@ -504,12 +517,18 @@ export default function BusinessQuiz() {
                   }
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your business type" />
+                    <SelectValue
+                      placeholder={t("onboard.step1.selectBusinessType")}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {businessTypes.map((type) => (
                       <SelectItem key={type} value={type}>
-                        {type}
+                        {t(
+                          `onboard.step1.businessTypes.${type
+                            .toLowerCase()
+                            .replace(/\s/g, "")}`
+                        )}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -518,12 +537,14 @@ export default function BusinessQuiz() {
 
               <div className="space-y-2">
                 <Label htmlFor="businessDescription">
-                  Business Description
+                  {t("onboard.step1.businessDescription")}
                 </Label>
                 <Textarea
                   id="businessDescription"
                   name="businessDescription"
-                  placeholder="Briefly describe your business"
+                  placeholder={t(
+                    "onboard.step1.businessDescriptionPlaceholder"
+                  )}
                   rows={4}
                   value={formData.businessDescription}
                   onChange={handleInputChange}
@@ -536,14 +557,12 @@ export default function BusinessQuiz() {
         return (
           <>
             <CardHeader>
-              <CardTitle>Logo & Branding</CardTitle>
-              <CardDescription>
-                Upload your logo and select your brand colors
-              </CardDescription>
+              <CardTitle>{t("onboard.step1.logo")}</CardTitle>
+              <CardDescription>{t("onboard.step1.uploadLogo")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="logo">Business Logo</Label>
+                <Label htmlFor="logo">{t("onboard.step1.logo")}</Label>
                 <div className="flex flex-col items-center gap-4">
                   <div
                     className="cursor-pointer"
@@ -571,7 +590,9 @@ export default function BusinessQuiz() {
                       htmlFor="logo-upload"
                       className="flex items-center justify-center w-full h-10 px-4 py-2 text-sm font-medium text-white bg-primary rounded-md cursor-pointer hover:bg-primary/90"
                     >
-                      {logoPreview ? "Change Logo" : "Upload Logo"}
+                      {logoPreview
+                        ? t("onboard.step1.change")
+                        : t("onboard.step1.uploadLogo")}
                     </Label>
                     <Input
                       id="logo-upload"
@@ -585,7 +606,9 @@ export default function BusinessQuiz() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="primaryColor">Primary Brand Color</Label>
+                <Label htmlFor="primaryColor">
+                  {t("onboard.step1.primaryColor")}
+                </Label>
                 <div className="flex items-center gap-4">
                   <Input
                     id="primaryColor"
@@ -613,15 +636,17 @@ export default function BusinessQuiz() {
           return (
             <>
               <CardHeader>
-                <CardTitle>Team & Services</CardTitle>
+                <CardTitle>{t("onboard.step3Salon.title")}</CardTitle>
                 <CardDescription>
-                  Tell us about your team and the services you offer
+                  {t("onboard.step3Salon.description")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Services Section */}
                 <div className="space-y-4 pt-2">
-                  <h3 className="text-sm font-medium">Services</h3>
+                  <h3 className="text-sm font-medium">
+                    {t("onboard.step3Salon.title")}
+                  </h3>
 
                   {/* List of added products/services */}
                   {formData.products.length > 0 && (
@@ -669,21 +694,29 @@ export default function BusinessQuiz() {
 
                   {/* Add service form */}
                   <div className="space-y-3 p-4 border rounded-md">
-                    <h4 className="text-sm font-medium">Add Service</h4>
+                    <h4 className="text-sm font-medium">
+                      {t("onboard.step3Salon.addService")}
+                    </h4>
                     <div className="space-y-3">
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div className="space-y-1">
-                          <Label htmlFor="productName">Service Name</Label>
+                          <Label htmlFor="productName">
+                            {t("onboard.step3Salon.serviceName")}
+                          </Label>
                           <Input
                             id="productName"
                             name="name"
-                            placeholder="Haircut & Styling"
+                            placeholder={t(
+                              "onboard.step3Salon.serviceNamePlaceholder"
+                            )}
                             value={newProduct.name}
                             onChange={handleNewProductChange}
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label htmlFor="productPrice">Price</Label>
+                          <Label htmlFor="productPrice">
+                            {t("onboard.step3Salon.price")}
+                          </Label>
                           <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                               $
@@ -691,7 +724,9 @@ export default function BusinessQuiz() {
                             <Input
                               id="productPrice"
                               name="price"
-                              placeholder="49.99"
+                              placeholder={t(
+                                "onboard.step3Salon.pricePlaceholder"
+                              )}
                               className="pl-7"
                               type="number"
                               value={newProduct.price}
@@ -701,18 +736,24 @@ export default function BusinessQuiz() {
                         </div>
                       </div>
                       <div className="space-y-1">
-                        <Label htmlFor="productDescription">Description</Label>
+                        <Label htmlFor="productDescription">
+                          {t("onboard.step3Salon.serviceDescription")}
+                        </Label>
                         <Textarea
                           id="productDescription"
                           name="description"
-                          placeholder="Describe your service"
+                          placeholder={t(
+                            "onboard.step3Salon.serviceDescriptionPlaceholder"
+                          )}
                           rows={2}
                           value={newProduct.description}
                           onChange={handleNewProductChange}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="serviceImage">Service Image</Label>
+                        <Label htmlFor="serviceImage">
+                          {t("onboard.step3Salon.image")}
+                        </Label>
                         <div className="flex items-center gap-4">
                           <div
                             className="cursor-pointer"
@@ -782,13 +823,15 @@ export default function BusinessQuiz() {
                       onCheckedChange={handleWorksAloneChange}
                     />
                     <Label htmlFor="worksAlone" className="font-medium">
-                      I work alone (no additional team members)
+                      {t("onboard.step4.worksAlone")}
                     </Label>
                   </div>
 
                   {!formData.worksAlone && (
                     <div className="space-y-4 pt-2">
-                      <h3 className="text-sm font-medium">Team Members</h3>
+                      <h3 className="text-sm font-medium">
+                        {t("onboard.step4.yourTeam")}
+                      </h3>
 
                       {/* List of added workers */}
                       {formData.workers.length > 0 && (
@@ -805,13 +848,15 @@ export default function BusinessQuiz() {
                                 </p>
                                 {worker.services.length > 0 && (
                                   <div className="text-sm">
-                                    <span>Services: </span>
+                                    <span>
+                                      {t("onboard.step3Salon.title")}:{" "}
+                                    </span>
                                     <span>
                                       {worker.services
                                         .map((serviceId) => {
                                           const service =
                                             formData.products.find(
-                                              (p) => p.id === serviceId,
+                                              (p) => p.id === serviceId
                                             );
                                           return service ? service.name : "";
                                         })
@@ -835,39 +880,48 @@ export default function BusinessQuiz() {
 
                       {/* Add worker form */}
                       <div className="space-y-3 p-4 border rounded-md">
-                        <h4 className="text-sm font-medium">Add Team Member</h4>
+                        <h4 className="text-sm font-medium">
+                          {t("onboard.step4.addWorker")}
+                        </h4>
                         <div className="space-y-3">
                           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <div className="space-y-1">
-                              <Label htmlFor="workerName">Full Name</Label>
+                              <Label htmlFor="workerName">
+                                {t("onboard.step4.workerName")}
+                              </Label>
                               <Input
                                 id="workerName"
                                 name="name"
-                                placeholder="John Doe"
+                                placeholder={t(
+                                  "onboard.step4.workerNamePlaceholder"
+                                )}
                                 value={newWorker.name}
                                 onChange={handleNewWorkerChange}
                               />
                             </div>
                             <div className="space-y-1">
                               <Label htmlFor="workerContact">
-                                Contact (Email/Phone)
+                                {t("onboard.step4.contact")}
                               </Label>
                               <Input
                                 id="workerContact"
                                 name="contact"
-                                placeholder="email@example.com"
+                                placeholder={t(
+                                  "onboard.step4.contactPlaceholder"
+                                )}
                                 value={newWorker.contact}
                                 onChange={handleNewWorkerChange}
                               />
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <Label>Services Provided</Label>
+                            <Label>
+                              {t("onboard.step4.availableServices")}
+                            </Label>
                             <div className="border rounded-md p-3 max-h-[200px] overflow-y-auto">
                               {formData.products.length === 0 ? (
                                 <p className="text-sm text-muted-foreground">
-                                  Add services first to assign them to team
-                                  members
+                                  {t("onboard.step4.selectServices")}
                                 </p>
                               ) : (
                                 <div className="space-y-2">
@@ -879,7 +933,7 @@ export default function BusinessQuiz() {
                                       <Checkbox
                                         id={`service-${service.id}`}
                                         checked={newWorker.services.includes(
-                                          service.id,
+                                          service.id
                                         )}
                                         onCheckedChange={() =>
                                           handleWorkerServiceToggle(service.id)
@@ -903,7 +957,7 @@ export default function BusinessQuiz() {
                             className="w-full sm:w-auto"
                           >
                             <Plus className="mr-2 h-4 w-4" />
-                            Add Team Member
+                            {t("onboard.step4.addWorker")}
                           </Button>
                         </div>
                       </div>
@@ -918,14 +972,16 @@ export default function BusinessQuiz() {
           return (
             <>
               <CardHeader>
-                <CardTitle>Rental Inventory</CardTitle>
+                <CardTitle>{t("onboard.step3.title")}</CardTitle>
                 <CardDescription>
-                  Tell us about the items you'll be renting out
+                  {t("onboard.step3.description")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="inventorySize">Inventory Size</Label>
+                  <Label htmlFor="inventorySize">
+                    {t("onboard.step3.inventorySize")}
+                  </Label>
                   <RadioGroup
                     value={formData.inventorySize}
                     onValueChange={(value) =>
@@ -939,7 +995,7 @@ export default function BusinessQuiz() {
                         htmlFor="inventory-small"
                         className="flex-1 cursor-pointer"
                       >
-                        Small (1-10 items)
+                        {t("onboard.step3.inventorySizes.small")}
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 rounded-md border p-3">
@@ -948,7 +1004,7 @@ export default function BusinessQuiz() {
                         htmlFor="inventory-medium"
                         className="flex-1 cursor-pointer"
                       >
-                        Medium (11-50 items)
+                        {t("onboard.step3.inventorySizes.medium")}
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 rounded-md border p-3">
@@ -957,14 +1013,16 @@ export default function BusinessQuiz() {
                         htmlFor="inventory-large"
                         className="flex-1 cursor-pointer"
                       >
-                        Large (50+ items)
+                        {t("onboard.step3.inventorySizes.large")}
                       </Label>
                     </div>
                   </RadioGroup>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="rentalPeriod">Typical Rental Period</Label>
+                  <Label htmlFor="rentalPeriod">
+                    {t("onboard.step3.rentalPeriod")}
+                  </Label>
                   <RadioGroup
                     value={formData.rentalPeriod}
                     onValueChange={(value) =>
@@ -978,7 +1036,7 @@ export default function BusinessQuiz() {
                         htmlFor="rental-hourly"
                         className="flex-1 cursor-pointer"
                       >
-                        Hourly
+                        {t("onboard.step3.periods.hourly")}
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 rounded-md border p-3">
@@ -987,7 +1045,7 @@ export default function BusinessQuiz() {
                         htmlFor="rental-daily"
                         className="flex-1 cursor-pointer"
                       >
-                        Daily
+                        {t("onboard.step3.periods.daily")}
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 rounded-md border p-3">
@@ -996,7 +1054,7 @@ export default function BusinessQuiz() {
                         htmlFor="rental-weekly"
                         className="flex-1 cursor-pointer"
                       >
-                        Weekly
+                        {t("onboard.step3.periods.weekly")}
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2 rounded-md border p-3">
@@ -1005,7 +1063,7 @@ export default function BusinessQuiz() {
                         htmlFor="rental-monthly"
                         className="flex-1 cursor-pointer"
                       >
-                        Monthly
+                        {t("onboard.step3.periods.monthly")}
                       </Label>
                     </div>
                   </RadioGroup>
@@ -1109,49 +1167,47 @@ export default function BusinessQuiz() {
         return (
           <>
             <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
+              <CardTitle>{t("onboard.step2.title")}</CardTitle>
               <CardDescription>
-                How can customers get in touch with your business?
+                {t("onboard.step2.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Business Email</Label>
+                <Label htmlFor="email">{t("onboard.step2.email")}</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="email@yourbusiness.com"
+                  placeholder={t("onboard.step2.emailPlaceholder")}
                   value={formData.email}
                   onChange={handleInputChange}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="address">Verslo adresas</Label>
+                <Label htmlFor="address">{t("onboard.step2.address")}</Label>
                 <Input
                   id="address"
                   name="address"
                   type="text"
+                  placeholder={t("onboard.step2.addressPlaceholder")}
                   value={formData.address}
                   onChange={handleInputChange}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="contactPhone">Business Phone</Label>
+                <Label htmlFor="contactPhone">{t("onboard.step2.phone")}</Label>
                 {/* Replace Input with PhoneInput */}
                 <PhoneInput
                   id="contactPhone"
                   name="contactPhone"
-                  placeholder="Enter phone number"
+                  placeholder={t("onboard.step2.phone")}
                   value={formData.contactPhone as Value | undefined}
                   onChange={handlePhoneChange}
-                  // Add the 'Input' class for styling consistency (optional, depends on your setup)
-                  // You might need a custom CSS file to style PhoneInput to match your UI components
-                  inputComponent={Input} // Use your existing Input component for styling
-                  defaultCountry="US" // Optional: Set a default country
-                  // className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" // Apply Tailwind classes directly if needed, though inputComponent is often better
+                  inputComponent={Input}
+                  defaultCountry="US"
                 />
               </div>
             </CardContent>
@@ -1161,18 +1217,18 @@ export default function BusinessQuiz() {
         return (
           <>
             <CardHeader>
-              <CardTitle>Website Preferences</CardTitle>
+              <CardTitle>{t("onboard.step5.title")}</CardTitle>
               <CardDescription>
-                Let us know how you'd like your website to be set up
+                {t("onboard.step5.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label>Additional Features</Label>
+                <Label>{t("onboard.step5.title")}</Label>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {[
+                    "Online Bookings",
                     "Online Payments",
-                    "Booking Calendar",
                     "Customer Reviews",
                     ...(isBeautySalon
                       ? ["Service Management", "Gift Cards"]
@@ -1196,7 +1252,13 @@ export default function BusinessQuiz() {
                           <CheckCircle2 className="h-4 w-4 text-primary" />
                         )}
                       </div>
-                      <span className="text-sm">{feature}</span>
+                      <span className="text-sm">
+                        {t(
+                          `onboard.step5.features.${feature
+                            .toLowerCase()
+                            .replace(/\s/g, "")}`
+                        )}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -1213,10 +1275,10 @@ export default function BusinessQuiz() {
     <div className="container mx-auto max-w-3xl py-12 px-4 md:py-24">
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold tracking-tight">
-          Tell Us About Your Business
+          {t("onboard.step1.title")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Complete this quick quiz to help us understand your business needs
+          {t("onboard.step1.description")}
         </p>
       </div>
 
@@ -1229,19 +1291,19 @@ export default function BusinessQuiz() {
           />
         </div>
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-          <span>Business</span>
-          <span>Branding</span>
+          <span>{t("onboard.step1.title")}</span>
+          <span>{t("onboard.step1.logo")}</span>
           {isBeautySalon ? (
             <>
-              <span>Team & Services</span>
-              <span>Contact</span>
-              <span>Preferences</span>
+              <span>{t("onboard.step3Salon.title")}</span>
+              <span>{t("onboard.step2.title")}</span>
+              <span>{t("onboard.step5.title")}</span>
             </>
           ) : (
             <>
-              <span>Inventory</span>
-              <span>Contact</span>
-              <span>Preferences</span>
+              <span>{t("onboard.step3.title")}</span>
+              <span>{t("onboard.step2.title")}</span>
+              <span>{t("onboard.step5.title")}</span>
             </>
           )}
         </div>
@@ -1275,7 +1337,7 @@ export default function BusinessQuiz() {
               disabled={step === 1 || loading}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back
+              {t("onboard.navigation.previous")}
             </Button>
             <Button
               disabled={loading}
@@ -1283,12 +1345,12 @@ export default function BusinessQuiz() {
             >
               {step === totalSteps ? (
                 <>
-                  Submit
+                  {t("onboard.navigation.submit")}
                   <Check className="ml-2 h-4 w-4" />
                 </>
               ) : (
                 <>
-                  Next
+                  {t("onboard.navigation.next")}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </>
               )}

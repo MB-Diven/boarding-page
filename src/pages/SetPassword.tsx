@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router";
 import supabase from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 export default function SetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -27,6 +28,7 @@ export default function SetPasswordPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Password validation criteria
   const hasMinLength = password.length >= 8;
@@ -48,9 +50,8 @@ export default function SetPasswordPage() {
     e.preventDefault();
 
     if (!isPasswordValid) {
-      toast.error("Invalid password", {
-        description:
-          "Please make sure your password meets all requirements and both passwords match.",
+      toast.error(t("setPassword.errorTitle"), {
+        description: t("setPassword.errorDescription"),
       });
       return;
     }
@@ -70,9 +71,8 @@ export default function SetPasswordPage() {
       );
 
       if (error) {
-        toast.error("Error setting password", {
-          description:
-            "There was a problem setting your password. Please try again.",
+        toast.error(t("setPassword.errorSettingPassword"), {
+          description: t("setPassword.errorSettingDescription"),
         });
         return;
       }
@@ -83,23 +83,21 @@ export default function SetPasswordPage() {
       });
 
       if (signInError) {
-        toast.error("Error signing in", {
-          description: "There was a problem signing in. Please try again.",
+        toast.error(t("setPassword.errorSigningIn"), {
+          description: t("setPassword.errorSigningDescription"),
         });
         return;
       }
 
-      toast("Password set successfully", {
-        description:
-          "Your account has been created. You can now log in with your new password.",
+      toast(t("setPassword.successMessage"), {
+        description: t("setPassword.successDescription"),
       });
 
       // Redirect to login page or dashboard
       window.location.href = data.url;
     } catch (error) {
-      toast.error("Error setting password", {
-        description:
-          "There was a problem setting your password. Please try again.",
+      toast.error(t("setPassword.errorSettingPassword"), {
+        description: t("setPassword.errorSettingDescription"),
       });
     } finally {
       setIsSubmitting(false);
@@ -122,23 +120,23 @@ export default function SetPasswordPage() {
             </div>
           </div>
           <CardTitle className="text-2xl text-center">
-            Set Your Password
+            {t("setPassword.title")}
           </CardTitle>
           <CardDescription className="text-center">
-            Create a secure password for your new account
+            {t("setPassword.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("setPassword.password")}</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder={t("setPassword.enterPassword")}
                   className="pr-10"
                 />
                 <Button
@@ -154,25 +152,31 @@ export default function SetPasswordPage() {
                     <Eye className="h-4 w-4" />
                   )}
                   <span className="sr-only">
-                    {showPassword ? "Hide password" : "Show password"}
+                    {showPassword
+                      ? t("common.hidePassword")
+                      : t("common.showPassword")}
                   </span>
                 </Button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">
+                {t("setPassword.confirmPassword")}
+              </Label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm your password"
+                placeholder={t("setPassword.confirmYourPassword")}
               />
             </div>
 
             <div className="space-y-2 rounded-md border p-3">
-              <p className="text-sm font-medium">Password must contain:</p>
+              <p className="text-sm font-medium">
+                {t("setPassword.passwordMustContain")}
+              </p>
               <ul className="space-y-1 text-sm">
                 <li className="flex items-center gap-2">
                   <CheckCircle2
@@ -185,7 +189,7 @@ export default function SetPasswordPage() {
                       hasMinLength ? "text-foreground" : "text-muted-foreground"
                     }
                   >
-                    At least 8 characters
+                    {t("setPassword.minLength")}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
@@ -199,7 +203,7 @@ export default function SetPasswordPage() {
                       hasUppercase ? "text-foreground" : "text-muted-foreground"
                     }
                   >
-                    At least one uppercase letter (A-Z)
+                    {t("setPassword.upperCase")}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
@@ -213,7 +217,7 @@ export default function SetPasswordPage() {
                       hasLowercase ? "text-foreground" : "text-muted-foreground"
                     }
                   >
-                    At least one lowercase letter (a-z)
+                    {t("setPassword.lowerCase")}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
@@ -227,7 +231,7 @@ export default function SetPasswordPage() {
                       hasNumber ? "text-foreground" : "text-muted-foreground"
                     }
                   >
-                    At least one number (0-9)
+                    {t("setPassword.number")}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
@@ -243,7 +247,7 @@ export default function SetPasswordPage() {
                         : "text-muted-foreground"
                     }
                   >
-                    At least one special character (!@#$%^&*)
+                    {t("setPassword.specialChar")}
                   </span>
                 </li>
                 <li className="flex items-center gap-2">
@@ -259,7 +263,7 @@ export default function SetPasswordPage() {
                         : "text-muted-foreground"
                     }
                   >
-                    Passwords match
+                    {t("setPassword.passwordsMatch")}
                   </span>
                 </li>
               </ul>
@@ -270,19 +274,21 @@ export default function SetPasswordPage() {
               className="w-full"
               disabled={!isPasswordValid || isSubmitting}
             >
-              {isSubmitting ? "Setting Password..." : "Set Password"}
+              {isSubmitting
+                ? t("setPassword.settingPassword")
+                : t("setPassword.setPasswordButton")}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
             <Lock className="h-4 w-4" />
-            <span>Your password is securely encrypted</span>
+            <span>{t("setPassword.passwordSecure")}</span>
           </div>
           <div className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
+            {t("setPassword.alreadyHaveAccount")}{" "}
             <a href="/login" className="text-primary hover:underline">
-              Log in
+              {t("setPassword.logIn")}
             </a>
           </div>
         </CardFooter>

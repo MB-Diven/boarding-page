@@ -1,10 +1,12 @@
 import { Button } from "./ui/button";
-
+import { useTranslation } from "react-i18next";
 import divenLogo from "../assets/logo_big.svg";
 import divenLogoSmall from "../assets/logo_small.svg";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const Header = () => {
   const pathname = window.location.pathname;
+  const { t } = useTranslation();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -38,38 +40,39 @@ const Header = () => {
               href="#features"
               className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
-              Features
+              {t("landing.features.title")}
             </a>
             <a
               href="#how-it-works"
               className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
-              How It Works
+              {t("landing.howItWorks.title")}
             </a>
             <a
               href="#pricing"
               className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
-              Pricing
+              {t("landing.pricing.title")}
             </a>
             <a
               href="#testimonials"
               className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
-              Testimonials
+              {t("landing.testimonials.title")}
             </a>
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex gap-2 items-center space-x-2">
+            <LanguageSwitcher />
             <a
               href="/login"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
-              Login
+              {t("login.title")}
             </a>
             <Button asChild>
-              <a href="/onboard">Get Started</a>
+              <a href="/onboard">{t("landing.hero.startFreeTrial")}</a>
             </Button>
           </nav>
         </div>

@@ -428,7 +428,7 @@ const LandingPage = () => {
                     className="rounded-full h-12 w-12 object-cover"
                   />
                   <div>
-                    <h3 className="text-lg font-bold">Sarah Johnson</h3>
+                    <h3 className="text-lg font-bold">Jared Shannon</h3>
                     <p className="text-sm text-muted-foreground">
                       Outdoor Equipment Rentals
                     </p>

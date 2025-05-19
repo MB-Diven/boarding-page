@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
+export interface User {
   id: number;
   created_at: string;
   businessName: string;
@@ -21,6 +21,10 @@ interface User {
   country: string;
   ip: string;
   unpaid_token: string;
+  address: string;
+  welcome_message: string;
+  custom_domain?: string;
+  site_id?: string;
 }
 
 export interface UserState {

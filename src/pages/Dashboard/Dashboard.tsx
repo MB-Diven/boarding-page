@@ -16,8 +16,53 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { getReservationChangeFromPreviousMonth } from "@/lib/clients";
+import supabase from "@/lib/supabase";
 
 export default function DashboardPage() {
+  const { user } = useSelector((state: RootState) => state.user);
+  const [totalRev, setTotalRev] = useState({
+    sum: 0,
+  });
+  const [rezervations, setRezervationAnalytics] = useState({
+    sum: "0",
+    percentageChange: "0",
+  });
+  const [newClients, setNewClientsAnalytics] = useState({
+    sum: "0",
+    percentageChange: "0",
+  });
+
+  useEffect(() => {
+    if (user) {
+      getReservationChangeFromPreviousMonth(user).then((data) => {
+        console.log(data);
+        if (data) {
+          setRezervationAnalytics({
+            sum: data.currentMonthCount.toString(),
+            percentageChange: data.percentChange,
+          });
+        }
+      });
+
+      let totalRev = 0;
+      user.worker_ids.forEach((workerId) => {
+        supabase
+          .from("workers")
+          .select("revenue")
+          .eq("id", workerId)
+          .single()
+          .then(({ data }) => {
+            totalRev += data?.revenue ?? 0;
+          });
+      });
+      setTotalRev({ sum: totalRev });
+    }
+  }, [user]);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -30,49 +75,58 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Bendras uždarbis
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$12,548</div>
-            <p className="text-xs text-muted-foreground">
-              <span className="text-emerald-500">+12.5%</span> from last month
-            </p>
+            <div className="text-2xl font-bold">€{totalRev.sum}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-medium">New Clients</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Nauji klientai
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+28</div>
+            <div className="text-2xl font-bold">+{newClients.sum}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-emerald-500">+8.2%</span> from last month
+              <span className="text-emerald-500">
+                {newClients.percentageChange}%
+              </span>{" "}
+              nuo preito mėnesio
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-medium">Appointments</CardTitle>
+            <CardTitle className="text-sm font-medium">Rezervacijos</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">142</div>
+            <div className="text-2xl font-bold">{rezervations.sum}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-emerald-500">+4.3%</span> from last month
+              <span className="text-emerald-500">
+                {rezervations.percentageChange}%
+              </span>{" "}
+              nuo preito mėnesio
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="opacity-50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-medium">Product Sales</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Produktų pardavimai
+            </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">87</div>
+            <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-rose-500">-2.1%</span> from last month
+              <span className="text-rose-500">+0%</span> nuo preito mėnesio
             </p>
           </CardContent>
         </Card>

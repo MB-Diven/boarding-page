@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertCircle,
   Check,
@@ -47,10 +47,13 @@ import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import supabase from "@/lib/supabase";
+import { User } from "@/store/userSlice";
+import { toast } from "sonner";
 
 export default function SettingsPage() {
   const { user } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
+  const [changeUser, setChangeUser] = useState<User | null>(user ?? null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
@@ -61,45 +64,27 @@ export default function SettingsPage() {
   >("idle");
   const [deploymentDialogOpen, setDeploymentDialogOpen] = useState(false);
 
-  // Business settings state
-  const [businessName, setBusinessName] = useState("Elegance Salon");
-  const [businessEmail, setBusinessEmail] = useState(
-    "contact@elegancesalon.com"
-  );
-  const [businessPhone, setBusinessPhone] = useState("+370 612 34567");
-  const [businessAddress, setBusinessAddress] = useState(
-    "Vilniaus g. 123, Vilnius"
-  );
-
   // Domain settings state
-  const [domain, _] = useState("elegancesalon.diven.lt");
   const [customDomain, setCustomDomain] = useState("");
-
-  // Appearance settings state
-  const [primaryColor, setPrimaryColor] = useState("#7c3aed");
-  const [logoUrl, setLogoUrl] = useState("/placeholder.svg?height=80&width=80");
-
-  // Content settings state
-  const [welcomeMessage, setWelcomeMessage] = useState(
-    "Sveiki atvykę į Elegance Salon!"
-  );
-  const [businessDescription, setBusinessDescription] = useState(
-    "Mes teikiame aukščiausios kokybės grožio paslaugas, kad jūs jaustumėtės ir atrodytumėte geriausiai."
-  );
 
   const handleSaveSettings = () => {
     setSaving(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setSaving(false);
-      setSaved(true);
-
-      // Reset saved state after 3 seconds
-      setTimeout(() => {
-        setSaved(false);
-      }, 3000);
-    }, 1000);
+    if (changeUser) {
+      // Simulate API call
+      supabase
+        .from("client")
+        .update({ ...changeUser })
+        .eq("id", changeUser.id)
+        .then(({ error }) => {
+          if (error) {
+            toast.error("Nepavyko išsaugoti pakeitimų");
+          } else {
+            setSaved(true);
+            setSaving(false);
+          }
+        });
+    }
   };
 
   const handlePayout = () => {
@@ -115,13 +100,29 @@ export default function SettingsPage() {
     }, 1500);
   };
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // In a real app, you would upload this to a server
-      // For now, we'll just create a local URL
-      const url = URL.createObjectURL(file);
-      setLogoUrl(url);
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (changeUser) {
+      const file = e.target.files?.[0];
+      if (file) {
+        // In a real app, you would upload this to a server
+        // For now, we'll just create a local URL
+        const fileBitArray = new Uint8Array(await file.arrayBuffer());
+        const { error } = await supabase.storage
+          .from("client-logos")
+          .upload(`${changeUser?.businessName}-logo`, fileBitArray, {
+            contentType: file.type,
+            upsert: true,
+          });
+
+        if (error) {
+          toast.error("There was an issue with uploading new logo!");
+        } else {
+          setChangeUser({
+            ...changeUser,
+            logo: `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/client-logos/${changeUser.businessName.toLowerCase()}-logo`,
+          });
+        }
+      }
     }
   };
 
@@ -135,10 +136,7 @@ export default function SettingsPage() {
           subdomain: user.businessName,
           clientId: user.id,
           sourceRepo: "MB-Diven/beauty_salon_boilerplate",
-          githubUsername: "",
-          forkName: `${user.businessName
-            .toLowerCase()
-            .replace(/ /g, "-")}.diven.lt`,
+          siteId: user.site_id,
         },
       })
       .then(({ data }) => {
@@ -147,8 +145,19 @@ export default function SettingsPage() {
         } else {
           setDeploymentStatus("error");
         }
+      })
+      .finally(() => {
+        setDeploymentDialogOpen(false);
       });
   };
+
+  useEffect(() => {
+    if (user) {
+      setChangeUser(user);
+    }
+  }, [user]);
+
+  if (!changeUser) return <p>Loading...</p>;
 
   return (
     <div className="space-y-6">
@@ -189,7 +198,7 @@ export default function SettingsPage() {
                 <div className="mt-4">
                   <Button variant="outline" asChild className="mt-2">
                     <a
-                      href={`https://${domain}`}
+                      href={`https://${changeUser.businessName.toLowerCase()}.diven.lt`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -230,7 +239,10 @@ export default function SettingsPage() {
                             <span className="text-muted-foreground">
                               Domenas:
                             </span>
-                            <span>{domain}</span>
+                            <span>
+                              https://{changeUser.businessName.toLowerCase()}
+                              .diven.lt
+                            </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">
@@ -301,8 +313,13 @@ export default function SettingsPage() {
                 <Label htmlFor="business-name">Verslo pavadinimas</Label>
                 <Input
                   id="business-name"
-                  value={businessName}
-                  onChange={(e) => setBusinessName(e.target.value)}
+                  value={changeUser.businessName}
+                  onChange={(e) =>
+                    setChangeUser({
+                      ...changeUser,
+                      businessName: e.target.value,
+                    })
+                  }
                 />
               </div>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -311,16 +328,23 @@ export default function SettingsPage() {
                   <Input
                     id="business-email"
                     type="email"
-                    value={businessEmail}
-                    onChange={(e) => setBusinessEmail(e.target.value)}
+                    value={changeUser.email}
+                    onChange={(e) =>
+                      setChangeUser({ ...changeUser, email: e.target.value })
+                    }
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="business-phone">Telefono numeris</Label>
                   <Input
                     id="business-phone"
-                    value={businessPhone}
-                    onChange={(e) => setBusinessPhone(e.target.value)}
+                    value={changeUser.contactPhone}
+                    onChange={(e) =>
+                      setChangeUser({
+                        ...changeUser,
+                        contactPhone: e.target.value,
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -328,8 +352,10 @@ export default function SettingsPage() {
                 <Label htmlFor="business-address">Adresas</Label>
                 <Input
                   id="business-address"
-                  value={businessAddress}
-                  onChange={(e) => setBusinessAddress(e.target.value)}
+                  value={changeUser.address}
+                  onChange={(e) =>
+                    setChangeUser({ ...changeUser, address: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -389,13 +415,23 @@ export default function SettingsPage() {
                   <Input
                     id="primary-color"
                     type="color"
-                    value={primaryColor}
-                    onChange={(e) => setPrimaryColor(e.target.value)}
+                    value={changeUser.primaryColor}
+                    onChange={(e) =>
+                      setChangeUser({
+                        ...changeUser,
+                        primaryColor: e.target.value,
+                      })
+                    }
                     className="w-12 h-10 p-1"
                   />
                   <Input
-                    value={primaryColor}
-                    onChange={(e) => setPrimaryColor(e.target.value)}
+                    value={changeUser.primaryColor}
+                    onChange={(e) =>
+                      setChangeUser({
+                        ...changeUser,
+                        primaryColor: e.target.value,
+                      })
+                    }
                     className="flex-1"
                   />
                 </div>
@@ -405,7 +441,7 @@ export default function SettingsPage() {
                 <div className="flex items-center gap-4">
                   <div className="h-20 w-20 overflow-hidden rounded-md border">
                     <img
-                      src={logoUrl || "/placeholder.svg"}
+                      src={changeUser.logo || "/placeholder.svg"}
                       alt="Business logo"
                       className="h-full w-full object-contain"
                     />
@@ -480,7 +516,11 @@ export default function SettingsPage() {
                   <Globe className="h-4 w-4 text-muted-foreground" />
                   <Input
                     id="current-domain"
-                    value={domain}
+                    value={
+                      changeUser.custom_domain
+                        ? changeUser.custom_domain
+                        : `https://${changeUser.businessName.toLowerCase()}.diven.lt`
+                    }
                     readOnly
                     className="bg-muted"
                   />
@@ -493,7 +533,10 @@ export default function SettingsPage() {
               <Separator />
 
               <div className="space-y-2">
-                <Label htmlFor="custom-domain">Pasirinktinis domenas</Label>
+                <Label htmlFor="custom-domain">
+                  Pasirinktinis domenas (Gali užtrukti iki 24 val. iki kol
+                  pasirodys)
+                </Label>
                 <div className="flex items-center gap-2">
                   <Globe className="h-4 w-4 text-muted-foreground" />
                   <Input
@@ -507,16 +550,6 @@ export default function SettingsPage() {
                   Įveskite savo pasirinktinį domeną, kurį norite naudoti.
                 </p>
               </div>
-
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Svarbu</AlertTitle>
-                <AlertDescription>
-                  Norėdami naudoti pasirinktinį domeną, turite nukreipti savo
-                  DNS įrašus į mūsų serverius. Instrukcijas rasite mūsų pagalbos
-                  centre.
-                </AlertDescription>
-              </Alert>
             </CardContent>
             <CardFooter>
               <Button onClick={handleSaveSettings} disabled={saving}>
@@ -551,8 +584,13 @@ export default function SettingsPage() {
                 <Label htmlFor="welcome-message">Pasisveikinimo žinutė</Label>
                 <Input
                   id="welcome-message"
-                  value={welcomeMessage}
-                  onChange={(e) => setWelcomeMessage(e.target.value)}
+                  value={changeUser.welcome_message}
+                  onChange={(e) =>
+                    setChangeUser({
+                      ...changeUser,
+                      welcome_message: e.target.value,
+                    })
+                  }
                 />
                 <p className="text-xs text-muted-foreground">
                   Ši žinutė bus rodoma jūsų svetainės pradžioje.
@@ -562,21 +600,19 @@ export default function SettingsPage() {
                 <Label htmlFor="business-description">Verslo aprašymas</Label>
                 <Textarea
                   id="business-description"
-                  value={businessDescription}
-                  onChange={(e) => setBusinessDescription(e.target.value)}
+                  value={changeUser.businessDescription}
+                  onChange={(e) =>
+                    setChangeUser({
+                      ...changeUser,
+                      businessDescription: e.target.value,
+                    })
+                  }
                   rows={4}
                 />
                 <p className="text-xs text-muted-foreground">
                   Trumpas jūsų verslo aprašymas, kuris bus rodomas jūsų
                   svetainėje.
                 </p>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="footer-text">Poraštės tekstas</Label>
-                <Input
-                  id="footer-text"
-                  placeholder="© 2023 Jūsų verslas. Visos teisės saugomos."
-                />
               </div>
             </CardContent>
             <CardFooter>
@@ -791,7 +827,11 @@ export default function SettingsPage() {
                   </div>
                   <Button variant="outline" asChild>
                     <a
-                      href={`https://${domain}`}
+                      href={
+                        changeUser.custom_domain
+                          ? changeUser.custom_domain
+                          : `https://${changeUser.businessName.toLowerCase()}.diven.lt`
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
                     >

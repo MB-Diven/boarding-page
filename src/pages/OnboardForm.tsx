@@ -95,6 +95,7 @@ export default function BusinessQuiz() {
     email: "",
     contactPhone: "",
     additionalFeatures: [] as string[],
+    address: "",
   });
 
   // Update the newWorker state to use an array for services
@@ -126,7 +127,7 @@ export default function BusinessQuiz() {
   }, [step, totalSteps]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -181,14 +182,14 @@ export default function BusinessQuiz() {
   };
 
   const handleNewWorkerChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setNewWorker((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleNewProductChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({ ...prev, [name]: value }));
@@ -306,7 +307,7 @@ export default function BusinessQuiz() {
         ) {
           body.append(
             key,
-            value instanceof File ? value : JSON.stringify(value)
+            value instanceof File ? value : JSON.stringify(value),
           );
         }
       });
@@ -318,7 +319,7 @@ export default function BusinessQuiz() {
         {
           body,
           method: "POST",
-        }
+        },
       );
 
       if (error) {
@@ -340,12 +341,12 @@ export default function BusinessQuiz() {
             price: formData.products[i].price,
             description: formData.products[i].description,
             id: formData.products[i].id,
-          })
+          }),
         );
 
         workerCreateFormData.append(
           "productImages",
-          formData.products[i].image
+          formData.products[i].image,
         );
       }
 
@@ -357,7 +358,7 @@ export default function BusinessQuiz() {
             id: Date.now().toString(),
             contact: formData.contactPhone,
             services: formData.products.map((product) => +product.id),
-          })
+          }),
         );
       } else {
         for (let i = 0; i < formData.workers.length; i++) {
@@ -368,9 +369,9 @@ export default function BusinessQuiz() {
               id: formData.workers[i].id,
               contact: formData.workers[i].contact,
               services: formData.workers[i].services.map(
-                (service: string) => +service
+                (service: string) => +service,
               ),
-            })
+            }),
           );
         }
       }
@@ -810,7 +811,7 @@ export default function BusinessQuiz() {
                                         .map((serviceId) => {
                                           const service =
                                             formData.products.find(
-                                              (p) => p.id === serviceId
+                                              (p) => p.id === serviceId,
                                             );
                                           return service ? service.name : "";
                                         })
@@ -878,7 +879,7 @@ export default function BusinessQuiz() {
                                       <Checkbox
                                         id={`service-${service.id}`}
                                         checked={newWorker.services.includes(
-                                          service.id
+                                          service.id,
                                         )}
                                         onCheckedChange={() =>
                                           handleWorkerServiceToggle(service.id)
@@ -1122,6 +1123,17 @@ export default function BusinessQuiz() {
                   type="email"
                   placeholder="email@yourbusiness.com"
                   value={formData.email}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Verslo adresas</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  type="text"
+                  value={formData.address}
                   onChange={handleInputChange}
                 />
               </div>

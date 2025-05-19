@@ -33,14 +33,16 @@ import {
 
 import divenLogo from "../../assets/logo_big.svg";
 import divenLogoSmall from "../../assets/logo_small.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import supabase from "@/lib/supabase";
+import { RootState } from "@/store/store";
 
 export default function DashboardLayout() {
   const pathname = window.location.pathname;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.user);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const routes = [
@@ -49,11 +51,11 @@ export default function DashboardLayout() {
       href: "/dashboard",
       icon: LayoutDashboard,
     },
-    // {
-    //   title: "Clients",
-    //   href: "/dashboard/clients",
-    //   icon: Users,
-    // },
+    {
+      title: "Clients",
+      href: "/dashboard/clients",
+      icon: Users,
+    },
     {
       title: "Products",
       href: "/dashboard/products",
@@ -107,6 +109,28 @@ export default function DashboardLayout() {
         navigate("/");
       });
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("deployments")
+        .select("*")
+        .eq("client_id", user.id)
+        .then(({ data }) => {
+          if (!data?.length) {
+            supabase.functions.invoke("deploy-site", {
+              method: "POST",
+              body: {
+                baseDomain: "diven.lt",
+                subdomain: `${user.businessName}-diven`,
+                clientId: user.id,
+                sourceRepo: "MB-Diven/beauty_salon_boilerplate",
+              },
+            });
+          }
+        });
+    }
+  }, [user]);
 
   return (
     <SidebarProvider defaultOpen={!isCollapsed} onOpenChange={setIsCollapsed}>

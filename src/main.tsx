@@ -17,6 +17,7 @@ import ProductsPage from "./pages/Dashboard/Products";
 import WorkersPage from "./pages/Dashboard/Workers";
 import AnalyticsPage from "./pages/Dashboard/Analytics";
 import SettingsPage from "./pages/Dashboard/Settings";
+import ClientsPage from "./pages/Dashboard/Clients";
 
 const router = createBrowserRouter([
   {
@@ -46,10 +47,10 @@ const router = createBrowserRouter([
         index: true,
         Component: DashboardPage,
       },
-      // {
-      //   path: "clients",
-      //   Component: ClientsPage,
-      // },
+      {
+        path: "clients",
+        Component: ClientsPage,
+      },
       {
         path: "appointments",
         Component: AppointmentsPage,

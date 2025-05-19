@@ -38,12 +38,24 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (user) {
-      getReservationChangeFromPreviousMonth(user).then((data) => {
-        console.log(data);
+      getReservationChangeFromPreviousMonth(user, "rezervation").then(
+        (data) => {
+          if (data) {
+            setRezervationAnalytics({
+              sum: data.currentMonthCount.toString(),
+              percentageChange:
+                data.percentChange === "N/A" ? "0" : data.percentChange,
+            });
+          }
+        },
+      );
+
+      getReservationChangeFromPreviousMonth(user, "people").then((data) => {
         if (data) {
-          setRezervationAnalytics({
+          setNewClientsAnalytics({
             sum: data.currentMonthCount.toString(),
-            percentageChange: data.percentChange,
+            percentageChange:
+              data.percentChange === "N/A" ? "0" : data.percentChange,
           });
         }
       });

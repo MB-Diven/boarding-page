@@ -1,9 +1,11 @@
 import { User } from "@/store/userSlice";
 import supabase from "./supabase";
-import { previousDay } from "date-fns";
 
 // Get the change in new reservations comparing this month to previous month
-export const getReservationChangeFromPreviousMonth = async (user: User) => {
+export const getReservationChangeFromPreviousMonth = async (
+  user: User,
+  table: string,
+) => {
   // Get date ranges
   const now = new Date();
   const firstDayCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -19,7 +21,7 @@ export const getReservationChangeFromPreviousMonth = async (user: User) => {
 
   // Query for current month count
   const { error: currentMonthError, count: currentMonthCount } = await supabase
-    .from("rezervation")
+    .from(table)
     .select("*", { count: "exact", head: true })
     .eq("client_id", user.id)
     .gte("created_at", currentMonthStart);
@@ -27,7 +29,7 @@ export const getReservationChangeFromPreviousMonth = async (user: User) => {
   // Query for previous month count
   const { error: previousMonthError, count: previousMonthCount } =
     await supabase
-      .from("rezervation")
+      .from(table)
       .select("*", { count: "exact", head: true })
       .eq("client_id", user.id)
       .gte("created_at", previousMonthStart)

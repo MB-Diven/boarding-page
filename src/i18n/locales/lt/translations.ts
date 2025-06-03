@@ -190,9 +190,9 @@ const ltTranslations = {
     password: "Slaptažodis",
     confirmPassword: "Patvirtinkite slaptažodį",
     enterPassword: "Įveskite slaptažodį",
-    confirmYourPassword: "Patvirtinkite slaptažodį",
+    confirmYourPassword: "Patvirtinkite savo slaptažodį",
     passwordMustContain: "Slaptažodis turi turėti:",
-    minLength: "Bent 8 simbolius",
+    minLength: "Mažiausiai 8 simbolius",
     upperCase: "Bent vieną didžiąją raidę (A-Z)",
     lowerCase: "Bent vieną mažąją raidę (a-z)",
     number: "Bent vieną skaičių (0-9)",
@@ -208,13 +208,12 @@ const ltTranslations = {
       "Įsitikinkite, kad slaptažodis atitinka visus reikalavimus ir abu slaptažodžiai sutampa.",
     errorSettingPassword: "Klaida nustatant slaptažodį",
     errorSettingDescription:
-      "Įvyko problema nustatant slaptažodį. Bandykite dar kartą.",
+      "Įvyko klaida nustatant slaptažodį. Bandykite dar kartą.",
     errorSigningIn: "Klaida prisijungiant",
-    errorSigningDescription:
-      "Įvyko problema prisijungiant. Bandykite dar kartą.",
-    successMessage: "Slaptažodis nustatytas sėkmingai",
+    errorSigningDescription: "Įvyko klaida prisijungiant. Bandykite dar kartą.",
+    successMessage: "Slaptažodis sėkmingai nustatytas",
     successDescription:
-      "Jūsų paskyra sukurta. Dabar galite prisijungti naudodami savo naują slaptažodį.",
+      "Jūsų paskyra sukurta. Dabar galite prisijungti naudodami naują slaptažodį.",
   },
 
   // Onboard Form translations
@@ -291,7 +290,7 @@ const ltTranslations = {
       missingInfo: "Trūksta informacijos",
       missingInfoDesc: "Nurodykite bent paslaugos pavadinimą ir kainą.",
       missingImage: "Trūksta nuotraukos",
-      missingImageDesc: "Prašome pridėti paslaugos nuotrauką.",
+      missingImageDesc: "Pridėkite paslaugos nuotrauką.",
     },
     step4: {
       title: "Komanda",

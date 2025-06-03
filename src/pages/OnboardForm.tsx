@@ -1227,15 +1227,18 @@ export default function BusinessQuiz() {
                 <Label>{t("onboard.step5.title")}</Label>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {[
-                    "Online Bookings",
-                    "Online Payments",
-                    "Customer Reviews",
+                    t("onboard.step5.features.onlinebookings"),
+                    t("onboard.step5.features.onlinepayments"),
+                    t("onboard.step5.features.customerreviews"),
                     ...(isBeautySalon
-                      ? ["Service Management", "Gift Cards"]
+                      ? [
+                          t("onboard.step5.features.servicemanagement"),
+                          t("onboard.step5.features.giftcards"),
+                        ]
                       : [
-                          "Inventory Management",
-                          "Damage Deposits",
-                          "Delivery Options",
+                          t("onboard.step5.features.inventorymanagement"),
+                          t("onboard.step5.features.damagedeposits"),
+                          t("onboard.step5.features.deliveryoptions"),
                         ]),
                   ].map((feature) => (
                     <div

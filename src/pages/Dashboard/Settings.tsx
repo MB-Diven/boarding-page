@@ -49,11 +49,22 @@ import { RootState } from "@/store/store";
 import supabase from "@/lib/supabase";
 import { User } from "@/store/userSlice";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { lt } from "date-fns/locale";
+
+interface Deployment {
+  id: string;
+  created_at: string;
+  status: string;
+  netlify_url: string;
+  message: string;
+}
 
 export default function SettingsPage() {
   const { user } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [changeUser, setChangeUser] = useState<User | null>(user ?? null);
+  const [deployments, setDeployments] = useState<Deployment[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
@@ -109,14 +120,19 @@ export default function SettingsPage() {
         const fileBitArray = new Uint8Array(await file.arrayBuffer());
         const { error } = await supabase.storage
           .from("client-logos")
-          .upload(`${changeUser?.businessName}-logo`, fileBitArray, {
-            contentType: file.type,
-            upsert: true,
-          });
+          .upload(
+            `${changeUser?.businessName.toLowerCase()}-logo`,
+            fileBitArray,
+            {
+              contentType: file.type,
+              upsert: true,
+            },
+          );
 
         if (error) {
           toast.error("There was an issue with uploading new logo!");
         } else {
+          toast.success("Logo uploaded successfully!");
           setChangeUser({
             ...changeUser,
             logo: `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/client-logos/${changeUser.businessName.toLowerCase()}-logo`,
@@ -154,6 +170,15 @@ export default function SettingsPage() {
   useEffect(() => {
     if (user) {
       setChangeUser(user);
+      supabase
+        .from("deployments")
+        .select("created_at, id, netlify_url, status")
+        .order("created_at", { ascending: false })
+        .eq("client_id", user.id)
+        .then(({ data }) => {
+          console.log(data);
+          setDeployments(data as Deployment[]);
+        });
     }
   }, [user]);
 
@@ -663,7 +688,9 @@ export default function SettingsPage() {
               <div className="rounded-md bg-muted p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-medium">Dabartinis balansas</h3>
+                    <h3 className="font-medium">
+                      Dabartinis balansas (NEVEIKIA)
+                    </h3>
                     <p className="text-2xl font-bold">€1,245.50</p>
                     <p className="text-xs text-muted-foreground">
                       Paskutinis atnaujinimas: 2023-04-27
@@ -752,66 +779,7 @@ export default function SettingsPage() {
                   </Dialog>
                 </div>
               </div>
-
-              <Separator />
-
-              <div className="space-y-2">
-                <Label htmlFor="bank-account">Banko sąskaita</Label>
-                <Input id="bank-account" placeholder="LT123456789012345678" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bank-name">Banko pavadinimas</Label>
-                <Input id="bank-name" placeholder="SEB / Swedbank / Luminor" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="account-holder">Sąskaitos savininkas</Label>
-                <Input
-                  id="account-holder"
-                  placeholder="Vardas Pavardė / Įmonės pavadinimas"
-                />
-              </div>
-
-              <Separator />
-
-              <div className="space-y-2">
-                <Label htmlFor="payment-methods">Priimami mokėjimo būdai</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="visa" defaultChecked />
-                    <Label htmlFor="visa">Visa</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="mastercard" defaultChecked />
-                    <Label htmlFor="mastercard">Mastercard</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="paypal" />
-                    <Label htmlFor="paypal">PayPal</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="cash" defaultChecked />
-                    <Label htmlFor="cash">Grynieji</Label>
-                  </div>
-                </div>
-              </div>
             </CardContent>
-            <CardFooter>
-              <Button onClick={handleSaveSettings} disabled={saving}>
-                {saving ? (
-                  <>Išsaugoma...</>
-                ) : saved ? (
-                  <>
-                    <Check className="mr-2 h-4 w-4" />
-                    Išsaugota
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    Išsaugoti pakeitimus
-                  </>
-                )}
-              </Button>
-            </CardFooter>
           </Card>
         </TabsContent>
 
@@ -837,7 +805,14 @@ export default function SettingsPage() {
                         <span>Live</span>
                       </Badge>
                       <span className="text-sm text-muted-foreground">
-                        Paskutinis atnaujinimas: 2023-04-25 14:30
+                        Paskutinis atnaujinimas:{" "}
+                        {format(
+                          new Date(deployments[0]?.created_at ?? new Date()),
+                          "PPPP",
+                          {
+                            locale: lt,
+                          },
+                        )}
                       </span>
                     </div>
                   </div>
@@ -862,28 +837,7 @@ export default function SettingsPage() {
                 <h3 className="font-medium">Publikavimo istorija</h3>
                 <div className="rounded-md border">
                   <div className="divide-y">
-                    {[
-                      {
-                        date: "2023-04-25 14:30",
-                        status: "success",
-                        changes: "Atnaujinti darbuotojų profiliai",
-                      },
-                      {
-                        date: "2023-04-20 10:15",
-                        status: "success",
-                        changes: "Pridėti nauji produktai",
-                      },
-                      {
-                        date: "2023-04-15 16:45",
-                        status: "error",
-                        changes: "Nepavyko atnaujinti domenų nustatymų",
-                      },
-                      {
-                        date: "2023-04-10 09:30",
-                        status: "success",
-                        changes: "Pradinė svetainės versija",
-                      },
-                    ].map((deployment, i) => (
+                    {deployments.map((deployment, i) => (
                       <div
                         key={i}
                         className="flex items-center justify-between p-4"
@@ -893,35 +847,37 @@ export default function SettingsPage() {
                             <Badge
                               variant="outline"
                               className={`flex items-center gap-1 ${
-                                deployment.status === "success"
+                                deployment.status === "SUCCESS" ||
+                                deployment.status === "PENDING"
                                   ? "text-green-600"
                                   : "text-red-600"
                               }`}
                             >
                               <span
                                 className={`h-2 w-2 rounded-full ${
-                                  deployment.status === "success"
+                                  deployment.status === "SUCCESS" ||
+                                  deployment.status === "PENDING"
                                     ? "bg-green-500"
                                     : "bg-red-500"
                                 }`}
                               ></span>
                               <span>
-                                {deployment.status === "success"
+                                {deployment.status === "SUCCESS" ||
+                                deployment.status === "PENDING"
                                   ? "Sėkminga"
                                   : "Klaida"}
                               </span>
                             </Badge>
-                            <span className="text-sm">{deployment.date}</span>
+                            <span className="text-sm">
+                              {format(new Date(deployment.created_at), "PPPP", {
+                                locale: lt,
+                              })}
+                            </span>
                           </div>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {deployment.changes}
+                            {deployment.message ?? "Automatinis publikavimas"}
                           </p>
                         </div>
-                        {deployment.status === "success" && (
-                          <Button variant="ghost" size="sm">
-                            Atkurti
-                          </Button>
-                        )}
                       </div>
                     ))}
                   </div>

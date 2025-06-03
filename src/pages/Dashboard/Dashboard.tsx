@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getReservationChangeFromPreviousMonth } from "@/lib/clients";
@@ -25,9 +25,8 @@ import { useTranslation } from "react-i18next";
 
 export default function DashboardPage() {
   const { user } = useSelector((state: RootState) => state.user);
-  const [totalRev, setTotalRev] = useState({
-    sum: 0,
-  });
+  const totalRev = useRef(null);
+  const calledData = useRef(false);
   const [rezervations, setRezervationAnalytics] = useState({
     sum: "0",
     percentageChange: "0",
@@ -40,40 +39,42 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (user) {
-      getReservationChangeFromPreviousMonth(user, "rezervation").then(
-        (data) => {
+      if (!calledData.current) {
+        getReservationChangeFromPreviousMonth(user, "rezervation").then(
+          (data) => {
+            if (data) {
+              setRezervationAnalytics({
+                sum: data.currentMonthCount.toString(),
+                percentageChange:
+                  data.percentChange === "N/A" ? "0" : data.percentChange,
+              });
+            }
+          },
+        );
+
+        getReservationChangeFromPreviousMonth(user, "people").then((data) => {
           if (data) {
-            setRezervationAnalytics({
+            setNewClientsAnalytics({
               sum: data.currentMonthCount.toString(),
               percentageChange:
                 data.percentChange === "N/A" ? "0" : data.percentChange,
             });
           }
-        }
-      );
+        });
 
-      getReservationChangeFromPreviousMonth(user, "people").then((data) => {
-        if (data) {
-          setNewClientsAnalytics({
-            sum: data.currentMonthCount.toString(),
-            percentageChange:
-              data.percentChange === "N/A" ? "0" : data.percentChange,
-          });
-        }
-      });
-
-      let totalRev = 0;
-      user.worker_ids.forEach((workerId) => {
-        supabase
-          .from("workers")
-          .select("revenue")
-          .eq("id", workerId)
-          .single()
-          .then(({ data }) => {
-            totalRev += data?.revenue ?? 0;
-          });
-      });
-      setTotalRev({ sum: totalRev });
+        user.worker_ids.forEach((workerId) => {
+          console.log(workerId);
+          supabase
+            .from("workers")
+            .select("revenue")
+            .eq("id", workerId)
+            .single()
+            .then(({ data }) => {
+              totalRev.current = (totalRev.current || 0) + (data?.revenue ?? 0);
+            });
+        });
+        calledData.current = true;
+      }
     }
   }, [user]);
 
@@ -97,7 +98,7 @@ export default function DashboardPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">€{totalRev.sum}</div>
+            <div className="text-2xl font-bold">€{totalRev.current}</div>
           </CardContent>
         </Card>
         <Card>

@@ -90,5 +90,5 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </Provider>
     </PostHogProvider>
-  </StrictMode>
+  </StrictMode>,
 );

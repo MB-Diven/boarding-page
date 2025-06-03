@@ -597,7 +597,23 @@ export default function SettingsPage() {
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="business-description">Verslo aprašymas</Label>
+                <Label htmlFor="about">Apie verslą</Label>
+                <Textarea
+                  id="about"
+                  value={changeUser.about}
+                  onChange={(e) =>
+                    setChangeUser({
+                      ...changeUser,
+                      about: e.target.value,
+                    })
+                  }
+                />
+                <p className="text-xs text-muted-foreground">
+                  Ši žinutė bus rodoma jūsų svetainės "apie" sekcijoje.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="business-description">Verslo paantraštė</Label>
                 <Textarea
                   id="business-description"
                   value={changeUser.businessDescription}

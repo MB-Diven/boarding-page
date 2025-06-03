@@ -23,6 +23,7 @@ export interface User {
   unpaid_token: string;
   address: string;
   welcome_message: string;
+  about: string;
   custom_domain?: string;
   site_id?: string;
 }

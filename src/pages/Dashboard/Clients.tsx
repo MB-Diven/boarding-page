@@ -42,8 +42,8 @@ export default function ClientsPage() {
         .from("people")
         .select("*")
         .eq("client_id", user.id)
-        .then(({ data, count }) => {
-          dispatch(setClients(data as Client[]));
+        .then(({ data }) => {
+          dispatch(setClients((data ?? []) as Client[]));
         });
     }
   }, [user, clients]);

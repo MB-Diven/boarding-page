@@ -19,6 +19,9 @@ import AnalyticsPage from "./pages/Dashboard/Analytics";
 import SettingsPage from "./pages/Dashboard/Settings";
 import ClientsPage from "./pages/Dashboard/Clients";
 
+// Import i18n
+import "./i18n/i18n";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -87,5 +90,5 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </Provider>
     </PostHogProvider>
-  </StrictMode>,
+  </StrictMode>
 );

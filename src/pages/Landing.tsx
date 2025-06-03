@@ -13,8 +13,11 @@ import {
 } from "lucide-react";
 import HeroImage from "../assets/hero.png";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 const LandingPage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
@@ -24,24 +27,22 @@ const LandingPage = () => {
               <div className="flex w-full max-w-lg flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Create Your Rental Business Website in Minutes
+                    {t("landing.hero.title")}
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Diven helps you build a professional rental platform and
-                    manage your inventory, bookings, and clients all in one
-                    place.
+                    {t("landing.hero.description")}
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button size="lg" asChild>
                     <a href="/onboard">
-                      Start Free Trial
+                      {t("landing.hero.startFreeTrial")}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
-                  <Button size="lg" variant="outline" asChild>
-                    <a href="/onboard">Book a Demo</a>
-                  </Button>
+                  {/* <Button size="lg" variant="outline" asChild>
+                    <a href="/onboard">{t("landing.hero.bookDemo")}</a>
+                  </Button> */}
                 </div>
                 {/* <div className="flex items-center space-x-4 text-sm">
                   <div className="flex items-center space-x-1">
@@ -52,7 +53,7 @@ const LandingPage = () => {
                     <Star className="h-4 w-4 fill-primary text-primary" />
                   </div>
                   <div className="text-muted-foreground">
-                    Trusted by over 2,000 rental businesses worldwide
+                    {t('landing.hero.trustedBy')}
                   </div>
                 </div> */}
               </div>
@@ -76,14 +77,13 @@ const LandingPage = () => {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
-                  Features
+                  {t("landing.features.title")}
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Everything You Need to Run Your Rental Business
+                  {t("landing.features.heading")}
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Diven provides all the tools you need to create a professional
-                  rental website and manage your business efficiently.
+                  {t("landing.features.description")}
                 </p>
               </div>
             </div>
@@ -93,10 +93,11 @@ const LandingPage = () => {
                   <Laptop className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Custom Rental Website</h3>
+                  <h3 className="text-xl font-bold">
+                    {t("landing.features.website.title")}
+                  </h3>
                   <p className="text-muted-foreground">
-                    Create a professional website for your rental business with
-                    customizable templates and no coding required.
+                    {t("landing.features.website.description")}
                   </p>
                 </div>
               </div>
@@ -105,10 +106,11 @@ const LandingPage = () => {
                   <ShoppingCart className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Inventory Management</h3>
+                  <h3 className="text-xl font-bold">
+                    {t("landing.features.inventory.title")}
+                  </h3>
                   <p className="text-muted-foreground">
-                    Easily manage your rental inventory, track availability, and
-                    prevent double bookings.
+                    {t("landing.features.inventory.description")}
                   </p>
                 </div>
               </div>
@@ -117,10 +119,11 @@ const LandingPage = () => {
                   <CreditCard className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Online Payments</h3>
+                  <h3 className="text-xl font-bold">
+                    {t("landing.features.payments.title")}
+                  </h3>
                   <p className="text-muted-foreground">
-                    Accept online payments, deposits, and set up recurring
-                    billing for your customers.
+                    {t("landing.features.payments.description")}
                   </p>
                 </div>
               </div>
@@ -129,10 +132,11 @@ const LandingPage = () => {
                   <Users className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Customer Management</h3>
+                  <h3 className="text-xl font-bold">
+                    {t("landing.features.customers.title")}
+                  </h3>
                   <p className="text-muted-foreground">
-                    Keep track of your customers, their rental history, and
-                    communicate with them directly.
+                    {t("landing.features.customers.description")}
                   </p>
                 </div>
               </div>
@@ -141,10 +145,11 @@ const LandingPage = () => {
                   <Smartphone className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Mobile Responsive</h3>
+                  <h3 className="text-xl font-bold">
+                    {t("landing.features.mobile.title")}
+                  </h3>
                   <p className="text-muted-foreground">
-                    Your rental website works perfectly on all devices, from
-                    desktops to smartphones.
+                    {t("landing.features.mobile.description")}
                   </p>
                 </div>
               </div>
@@ -153,10 +158,11 @@ const LandingPage = () => {
                   <Settings className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Advanced Dashboard</h3>
+                  <h3 className="text-xl font-bold">
+                    {t("landing.features.dashboard.title")}
+                  </h3>
                   <p className="text-muted-foreground">
-                    Get insights into your business with analytics, reports, and
-                    customizable dashboards.
+                    {t("landing.features.dashboard.description")}
                   </p>
                 </div>
               </div>
@@ -168,14 +174,13 @@ const LandingPage = () => {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
-                  How It Works
+                  {t("landing.howItWorks.title")}
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Get Your Rental Business Online in 3 Simple Steps
+                  {t("landing.howItWorks.heading")}
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Diven makes it easy to create your rental website and start
-                  accepting bookings right away.
+                  {t("landing.howItWorks.description")}
                 </p>
               </div>
             </div>
@@ -186,11 +191,10 @@ const LandingPage = () => {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">
-                    Sign Up & Choose a Template
+                    {t("landing.howItWorks.step1.title")}
                   </h3>
                   <p className="text-muted-foreground">
-                    Create your Diven account and select from our professionally
-                    designed templates for your rental business.
+                    {t("landing.howItWorks.step1.description")}
                   </p>
                 </div>
                 <div className="absolute right-10 top-5 hidden h-0.5 w-full bg-border lg:block lg:w-[calc(50%+1rem)]"></div>
@@ -201,11 +205,10 @@ const LandingPage = () => {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">
-                    Customize & Add Products
+                    {t("landing.howItWorks.step2.title")}
                   </h3>
                   <p className="text-muted-foreground">
-                    Personalize your website with your branding and add your
-                    rental inventory with pricing and availability.
+                    {t("landing.howItWorks.step2.description")}
                   </p>
                 </div>
                 <div className="absolute right-10 top-5 hidden h-0.5 w-full bg-border lg:block lg:w-[calc(50%+1rem)]"></div>
@@ -216,11 +219,10 @@ const LandingPage = () => {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">
-                    Launch & Start Accepting Bookings
+                    {t("landing.howItWorks.step3.title")}
                   </h3>
                   <p className="text-muted-foreground">
-                    Publish your website and start accepting online bookings and
-                    payments from your customers.
+                    {t("landing.howItWorks.step3.description")}
                   </p>
                 </div>
               </div>
@@ -228,7 +230,7 @@ const LandingPage = () => {
             <div className="flex justify-center">
               <Button size="lg" asChild>
                 <a href="/onboard">
-                  Get Started Now
+                  {t("landing.howItWorks.getStarted")}
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </a>
               </Button>
@@ -243,13 +245,13 @@ const LandingPage = () => {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
-                  Pricing
+                  {t("landing.pricing.title")}
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Simple, Transparent Pricing
+                  {t("landing.pricing.heading")}
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  One plan fits all. No hidden fees, no surprises.
+                  {t("landing.pricing.description")}
                 </p>
               </div>
             </div>
@@ -257,51 +259,50 @@ const LandingPage = () => {
               <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm">
                 <div className="space-y-2">
                   <h3 className="text-2xl font-bold flex justify-start items-center gap-2">
-                    Starter{" "}
+                    {t("landing.pricing.starter.title")}{" "}
                     <Badge variant="secondary" className="text-white">
-                      Free 7-day trial
+                      {t("landing.pricing.starter.freeTrial")}
                     </Badge>
                   </h3>
                   <p className="text-muted-foreground">
-                    Perfect for all kinds of rental businesses just getting
-                    started.
+                    {t("landing.pricing.starter.description")}
                   </p>
                 </div>
                 <div className="mt-4 flex items-baseline text-5xl font-bold">
-                  32€
+                  {t("landing.pricing.starter.price")}
                   <span className="ml-1 text-base font-medium text-muted-foreground">
-                    /month
+                    {t("landing.pricing.starter.perMonth")}
                   </span>
                 </div>
                 <ul className="mt-6 space-y-3">
                   <li className="flex items-center">
                     <Check className="mr-2 h-4 w-4 text-primary" />
-                    <span>Up to 200 rental items</span>
+                    <span>{t("landing.pricing.starter.items.0")}</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="mr-2 h-4 w-4 text-primary" />
-                    <span>Website customization</span>
+                    <span>{t("landing.pricing.starter.items.1")}</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="mr-2 h-4 w-4 text-primary" />
-                    <span>Online booking system and payment processing</span>
+                    <span>{t("landing.pricing.starter.items.2")}</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="mr-2 h-4 w-4 text-primary" />
-                    <span>Customer management</span>
+                    <span>{t("landing.pricing.starter.items.3")}</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="mr-2 h-4 w-4 text-primary" />
-                    <span>Email support</span>
+                    <span>{t("landing.pricing.starter.items.4")}</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="mr-2 h-4 w-4 text-primary" />
-                    <span>Custom domain</span>
+                    <span>{t("landing.pricing.starter.items.5")}</span>
                   </li>
                 </ul>
                 <a href="/onboard">
                   <Button className="mt-8" size="lg">
-                    Start Free Trial
+                    {t("landing.pricing.starter.button")}
                   </Button>
                 </a>
               </div>
@@ -406,14 +407,13 @@ const LandingPage = () => {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">
-                  Testimonials
+                  {t("landing.testimonials.title")}
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Trusted by Rental Businesses Worldwide
+                  {t("landing.testimonials.heading")}
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  See what our customers have to say about how Diven has
-                  transformed their rental businesses.
+                  {t("landing.testimonials.description")}
                 </p>
               </div>
             </div>
@@ -428,9 +428,11 @@ const LandingPage = () => {
                     className="rounded-full h-12 w-12 object-cover"
                   />
                   <div>
-                    <h3 className="text-lg font-bold">Jared Shannon</h3>
+                    <h3 className="text-lg font-bold">
+                      {t("landing.testimonials.testimonial1.name")}
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      Outdoor Equipment Rentals
+                      {t("landing.testimonials.testimonial1.business")}
                     </p>
                   </div>
                 </div>
@@ -442,10 +444,7 @@ const LandingPage = () => {
                   <Star className="h-5 w-5 fill-primary text-primary" />
                 </div>
                 <blockquote className="mt-4 text-muted-foreground">
-                  "Diven has completely transformed our rental business. We used
-                  to manage everything manually, but now our customers can book
-                  online and we can track our inventory effortlessly. Our
-                  revenue has increased by 40% since we started using Diven."
+                  "{t("landing.testimonials.testimonial1.text")}"
                 </blockquote>
               </div>
               <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm">
@@ -458,9 +457,11 @@ const LandingPage = () => {
                     className="rounded-full h-12 w-12 object-cover"
                   />
                   <div>
-                    <h3 className="text-lg font-bold">Michael Chen</h3>
+                    <h3 className="text-lg font-bold">
+                      {t("landing.testimonials.testimonial2.name")}
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      Camera Equipment Rentals
+                      {t("landing.testimonials.testimonial2.business")}
                     </p>
                   </div>
                 </div>
@@ -472,10 +473,7 @@ const LandingPage = () => {
                   <Star className="h-5 w-5 fill-primary text-primary" />
                 </div>
                 <blockquote className="mt-4 text-muted-foreground">
-                  "The dashboard is incredibly intuitive and gives me all the
-                  insights I need to run my business. Setting up my rental
-                  website was surprisingly easy, and my customers love the
-                  seamless booking experience. Highly recommended!"
+                  "{t("landing.testimonials.testimonial2.text")}"
                 </blockquote>
               </div>
               <div className="flex flex-col rounded-xl border bg-background p-6 shadow-sm">
@@ -488,9 +486,11 @@ const LandingPage = () => {
                     className="rounded-full h-12 w-12 object-cover"
                   />
                   <div>
-                    <h3 className="text-lg font-bold">Emma Rodriguez</h3>
+                    <h3 className="text-lg font-bold">
+                      {t("landing.testimonials.testimonial3.name")}
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      Beauty salon owner
+                      {t("landing.testimonials.testimonial3.business")}
                     </p>
                   </div>
                 </div>
@@ -502,10 +502,7 @@ const LandingPage = () => {
                   <Star className="h-5 w-5 fill-primary text-primary" />
                 </div>
                 <blockquote className="mt-4 text-muted-foreground">
-                  "Before Diven, I was spending hours managing bookings. Now
-                  everything is automated, and I can focus on growing my
-                  business. The customer support team is also fantastic and
-                  always ready to help."
+                  "{t("landing.testimonials.testimonial3.text")}"
                 </blockquote>
               </div>
             </div>
@@ -516,32 +513,28 @@ const LandingPage = () => {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  Ready to Transform Your Rental Business?
+                  {t("landing.cta.heading")}
                 </h2>
                 <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Join thousands of rental businesses that trust Diven to power
-                  their online presence.
+                  {t("landing.cta.description")}
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Button size="lg" variant="secondary" asChild>
                   <a href="/onboard">
-                    Start Your 7-Day Free Trial
+                    {t("landing.cta.startTrial")}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <Button
+                {/* <Button
                   size="lg"
                   variant="outline"
                   className="bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary"
                   asChild
                 >
-                  <a href="/onboard">Schedule a Demo</a>
-                </Button>
+                  <a href="/onboard">{t("landing.cta.scheduleDemo")}</a>
+                </Button> */}
               </div>
-              <p className="text-sm">
-                No credit card required. Cancel anytime.
-              </p>
             </div>
           </div>
         </section>
@@ -554,8 +547,7 @@ const LandingPage = () => {
                 <span className="inline-block font-bold text-xl">Diven</span>
               </a>
               <p className="text-sm text-muted-foreground">
-                The all-in-one platform for creating and managing your rental
-                business website.
+                {t("landing.footer.companyDescription")}
               </p>
               <div className="flex space-x-4">
                 <a
@@ -611,14 +603,16 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <h3 className="text-sm font-medium">Company</h3>
+              <h3 className="text-sm font-medium">
+                {t("landing.footer.companyTitle")}
+              </h3>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    About
+                    {t("landing.footer.about")}
                   </a>
                 </li>
                 <li>
@@ -626,7 +620,7 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Careers
+                    {t("landing.footer.careers")}
                   </a>
                 </li>
                 <li>
@@ -634,7 +628,7 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Press
+                    {t("landing.footer.press")}
                   </a>
                 </li>
                 <li>
@@ -642,20 +636,22 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Blog
+                    {t("landing.footer.blog")}
                   </a>
                 </li>
               </ul>
             </div>
             <div className="space-y-4">
-              <h3 className="text-sm font-medium">Product</h3>
+              <h3 className="text-sm font-medium">
+                {t("landing.footer.productTitle")}
+              </h3>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Features
+                    {t("landing.footer.features")}
                   </a>
                 </li>
                 <li>
@@ -663,7 +659,7 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Pricing
+                    {t("landing.footer.pricing")}
                   </a>
                 </li>
                 <li>
@@ -671,7 +667,7 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Testimonials
+                    {t("landing.footer.testimonials")}
                   </a>
                 </li>
                 <li>
@@ -679,20 +675,22 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    FAQ
+                    {t("landing.footer.faq")}
                   </a>
                 </li>
               </ul>
             </div>
             <div className="space-y-4">
-              <h3 className="text-sm font-medium">Support</h3>
+              <h3 className="text-sm font-medium">
+                {t("landing.footer.supportTitle")}
+              </h3>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Help Center
+                    {t("landing.footer.helpCenter")}
                   </a>
                 </li>
                 <li>
@@ -700,7 +698,7 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Contact Us
+                    {t("landing.footer.contactUs")}
                   </a>
                 </li>
                 <li>
@@ -708,7 +706,7 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Privacy Policy
+                    {t("landing.footer.privacyPolicy")}
                   </a>
                 </li>
                 <li>
@@ -716,14 +714,17 @@ const LandingPage = () => {
                     href="#"
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Terms of Service
+                    {t("landing.footer.termsOfService")}
                   </a>
                 </li>
               </ul>
             </div>
           </div>
           <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Diven. All rights reserved.
+            {t("landing.footer.copyright").replace(
+              "${year}",
+              new Date().getFullYear().toString()
+            )}
           </div>
         </div>
       </footer>

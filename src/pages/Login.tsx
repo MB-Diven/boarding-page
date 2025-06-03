@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import supabase from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,13 +28,14 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error("Missing information", {
-        description: "Please enter email and password.",
+      toast.error(t("login.missingInfo"), {
+        description: t("login.missingInfoDescription"),
       });
       return;
     }
@@ -49,22 +51,22 @@ export default function LoginPage() {
       });
 
       if (error) {
-        toast.error("Login failed", {
-          description: "Invalid email or password. Please try again.",
+        toast.error(t("login.errorTitle"), {
+          description: t("login.errorDescription"),
         });
         setIsSubmitting(false);
         return;
       }
 
-      toast("Login successful", {
-        description: "Welcome back to your account.",
+      toast(t("login.successMessage"), {
+        description: t("login.successDescription"),
       });
 
       // Redirect to dashboard
       navigate("/dashboard");
     } catch (error) {
-      toast.error("Login failed", {
-        description: "Invalid email or password. Please try again.",
+      toast.error(t("login.errorTitle"), {
+        description: t("login.errorDescription"),
       });
     } finally {
       setIsSubmitting(false);
@@ -75,21 +77,23 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center">Login</CardTitle>
+          <CardTitle className="text-2xl text-center">
+            {t("login.title")}
+          </CardTitle>
           <CardDescription className="text-center">
-            Enter your login credentials to access your account
+            {t("login.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("login.email")}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder={t("login.emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -100,12 +104,12 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("login.password")}</Label>
                 <a
                   href="/forgot-password"
                   className="text-sm text-primary hover:underline"
                 >
-                  Forgot Password?
+                  {t("login.forgotPassword")}
                 </a>
               </div>
               <div className="relative">
@@ -113,7 +117,7 @@ export default function LoginPage() {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  placeholder={t("login.passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 pr-10"
@@ -132,7 +136,9 @@ export default function LoginPage() {
                     <Eye className="h-4 w-4" />
                   )}
                   <span className="sr-only">
-                    {showPassword ? "Hide password" : "Show password"}
+                    {showPassword
+                      ? t("common.hidePassword")
+                      : t("common.showPassword")}
                   </span>
                 </Button>
               </div>
@@ -148,12 +154,12 @@ export default function LoginPage() {
                 htmlFor="remember"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Remember me
+                {t("login.rememberMe")}
               </Label>
             </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Logging in..." : "Login"}
+              {isSubmitting ? t("login.loggingIn") : t("login.loginButton")}
             </Button>
           </form>
         </CardContent>

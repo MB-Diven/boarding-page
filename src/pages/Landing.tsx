@@ -40,9 +40,9 @@ const LandingPage = () => {
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
-                  <Button size="lg" variant="outline" asChild>
+                  {/* <Button size="lg" variant="outline" asChild>
                     <a href="/onboard">{t("landing.hero.bookDemo")}</a>
-                  </Button>
+                  </Button> */}
                 </div>
                 {/* <div className="flex items-center space-x-4 text-sm">
                   <div className="flex items-center space-x-1">
@@ -526,16 +526,15 @@ const LandingPage = () => {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <Button
+                {/* <Button
                   size="lg"
                   variant="outline"
                   className="bg-transparent text-primary-foreground border-primary-foreground hover:bg-primary-foreground hover:text-primary"
                   asChild
                 >
                   <a href="/onboard">{t("landing.cta.scheduleDemo")}</a>
-                </Button>
+                </Button> */}
               </div>
-              <p className="text-sm">{t("landing.cta.noCreditCard")}</p>
             </div>
           </div>
         </section>

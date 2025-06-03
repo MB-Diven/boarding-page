@@ -5,7 +5,7 @@ const ltTranslations = {
       title: "Sukurkite savo nuomos verslo svetainę per kelias minutes",
       description:
         "Diven padeda sukurti profesionalią nuomos platformą ir valdyti savo inventorių, užsakymus ir klientus vienoje vietoje.",
-      startFreeTrial: "Pradėti nemokamą bandomąjį laikotarpį",
+      startFreeTrial: "Pradėti bandomąjį laikotarpį",
       bookDemo: "Užsisakyti demonstraciją",
       trustedBy:
         "Mumis pasitiki daugiau nei 2000 nuomos verslų visame pasaulyje",
@@ -79,7 +79,7 @@ const ltTranslations = {
 
       starter: {
         title: "Pradinė",
-        freeTrial: "Nemokamas 7 dienų bandomasis laikotarpis",
+        freeTrial: "7 dienų bandomasis laikotarpis",
         description:
           "Puikiai tinka visų rūšių nuomos verslams, kurie tik pradeda.",
         price: "32€",
@@ -121,7 +121,7 @@ const ltTranslations = {
       heading: "Pasiruošę transformuoti savo nuomos verslą?",
       description:
         "Prisijunkite prie tūkstančių nuomos verslų, kurie pasitiki Diven savo internetiniam buvimui.",
-      startTrial: "Pradėkite 7 dienų nemokamą bandomąjį laikotarpį",
+      startTrial: "Pradėkite 7 dienų bandomąjį laikotarpį",
       scheduleDemo: "Suplanuokite demonstraciją",
       noCreditCard: "Kredito kortelė nereikalinga. Galite atšaukti bet kada.",
     },

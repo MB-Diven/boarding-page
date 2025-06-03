@@ -3,7 +3,6 @@ import { Outlet, useNavigate, Link } from "react-router";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import {
-  BarChart3,
   Calendar,
   LayoutDashboard,
   LogOut,

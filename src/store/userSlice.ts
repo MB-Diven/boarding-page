@@ -26,14 +26,52 @@ export interface User {
   about: string;
   custom_domain?: string;
   site_id?: string;
+  product_ids: string[];
+}
+
+export interface Product {
+  name: string;
+  sales: number;
+  photo: string;
+  id: number;
+  price: number;
+  duration: number;
+  description: string;
+}
+
+export interface Worker {
+  id: string;
+  name: string;
+  clients: number;
+  revenue: number;
+  contact: string;
+  services: string[];
+  rating: number;
+  photo?: string;
+  product_ids: number[];
+}
+
+export interface Client {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  last_visit: string;
+  total_spent: number;
 }
 
 export interface UserState {
   user?: User;
+  workers: Worker[];
+  products: Product[];
+  clients?: Client[];
 }
 
 const initialState: UserState = {
   user: undefined,
+  workers: [],
+  products: [],
+  clients: undefined,
 };
 
 export const userSlice = createSlice({
@@ -43,10 +81,20 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
+    setProducts: (state, action: PayloadAction<Product[]>) => {
+      state.products = action.payload;
+    },
+    setClients: (state, action: PayloadAction<Client[]>) => {
+      state.clients = action.payload;
+    },
+    setWorkers: (state, action: PayloadAction<Worker[]>) => {
+      state.workers = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser } = userSlice.actions;
+export const { setUser, setProducts, setClients, setWorkers } =
+  userSlice.actions;
 
 export default userSlice.reducer;

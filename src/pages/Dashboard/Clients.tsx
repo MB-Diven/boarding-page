@@ -19,25 +19,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import supabase from "@/lib/supabase";
-
-interface Client {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  last_visit: string;
-  total_spent: number;
-}
+import { Client, setClients } from "@/store/userSlice";
 
 export default function ClientsPage() {
-  const { user } = useSelector((state: RootState) => state.user);
-  const [clients, setClients] = useState<Client[]>([]);
+  const { user, clients } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredClients = clients.filter(
+  const filteredClients = clients?.filter(
     (client) =>
       client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -45,19 +37,16 @@ export default function ClientsPage() {
   );
 
   useEffect(() => {
-    if (user) {
+    if (user && !clients) {
       supabase
         .from("people")
         .select("*")
         .eq("client_id", user.id)
         .then(({ data, count }) => {
-          console.log(data);
-          if (count) {
-            setClients(data as Client[]);
-          }
+          dispatch(setClients(data as Client[]));
         });
     }
-  }, [user]);
+  }, [user, clients]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -96,7 +85,7 @@ export default function ClientsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredClients.map((client) => (
+            {(filteredClients ?? []).map((client) => (
               <TableRow key={client.id}>
                 <TableCell className="font-medium">{client.name}</TableCell>
                 <TableCell>{client.email}</TableCell>

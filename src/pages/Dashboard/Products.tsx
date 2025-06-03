@@ -30,20 +30,14 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import supabase from "@/lib/supabase";
-
-interface Product {
-  name: string;
-  sales: number;
-  photo: string;
-  id: number;
-  price: number;
-  duration: number;
-  description: string;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { Product, setProducts } from "@/store/userSlice";
 
 export default function ProductsPage() {
+  const { user, products } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
-  const [products, setProducts] = useState<Product[]>([]);
   const [isEditProductDialogOpen, setIsEditProductDialogOpen] = useState(false);
 
   // Edited product state
@@ -59,7 +53,9 @@ export default function ProductsPage() {
       .delete()
       .eq("id", productId)
       .then(() => {
-        setProducts(products.filter((product) => product.id !== productId));
+        dispatch(
+          setProducts(products.filter((product) => product.id !== productId)),
+        );
 
         supabase.from("client").update({
           product_ids: products
@@ -76,22 +72,19 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
-    supabase
-      .from("client")
-      .select("product_ids")
-      .single()
-      .then(({ data }) => {
-        if (data?.product_ids) {
-          supabase
-            .from("products")
-            .select("*")
-            .in("id", data.product_ids)
-            .then(({ data }) => {
-              setProducts(data as Product[]);
-            });
-        }
-      });
-  }, []);
+    if (!products.length && user) {
+      supabase
+        .from("products")
+        .select("*")
+        .in(
+          "id",
+          user.product_ids.map((id) => +id),
+        )
+        .then(({ data }) => {
+          dispatch(setProducts(data as Product[]));
+        });
+    }
+  }, [user, products]);
 
   return (
     <div className="flex flex-col gap-6">

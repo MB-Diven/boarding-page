@@ -30,48 +30,34 @@ import {
 } from "@/components/ui/table";
 import placeholderProfileImg from "@/assets/placeholder_profile.jpg";
 import supabase from "@/lib/supabase";
-
-interface Worker {
-  id: string;
-  name: string;
-  clients: number;
-  revenue: number;
-  contact: string;
-  services: string[];
-  rating: number;
-  photo?: string;
-  product_ids: number[];
-}
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setWorkers } from "@/store/userSlice";
 
 // interface EditWorker extends Omit<Worker, "id"> {
 //   id?: string;
 // }
 
 export default function WorkersPage() {
+  const { user, workers } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
-  const [workers, setWorkers] = useState<Worker[]>([]);
 
   const filteredWorkers = workers.filter((worker) =>
-    worker.name.toLowerCase().includes(searchQuery.toLowerCase())
+    worker.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   useEffect(() => {
-    supabase
-      .from("client")
-      .select("*")
-      .single()
-      .then(({ data }: { data: any }) => {
-        if (data) {
-          supabase
-            .from("workers")
-            .select("*")
-            .in("id", data.worker_ids)
-            .then(({ data: workers }) => {
-              setWorkers(workers as Worker[]);
-            });
-        }
-      });
-  }, []);
+    if (user && !workers.length) {
+      supabase
+        .from("workers")
+        .select("*")
+        .in("id", user.worker_ids)
+        .then(({ data }) => {
+          dispatch(setWorkers(data || []));
+        });
+    }
+  }, [user, workers]);
 
   return (
     <div className="flex flex-col gap-6">

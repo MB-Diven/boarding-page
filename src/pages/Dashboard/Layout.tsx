@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, Link } from "react-router";
 
 import { useEffect, useState } from "react";
 import {
@@ -136,8 +136,8 @@ export default function DashboardLayout() {
     <SidebarProvider defaultOpen={!isCollapsed} onOpenChange={setIsCollapsed}>
       <div className="flex min-h-screen w-full flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
-          <a
-            href="/dashboard"
+          <Link
+            to="/dashboard"
             className="hidden overflow-hidden md:flex items-center max-h-[50px] max-w-[125px] space-x-2"
           >
             <img
@@ -147,9 +147,9 @@ export default function DashboardLayout() {
               src={divenLogo}
               alt="Diven logo"
             />
-          </a>
-          <a
-            href="/dashboard"
+          </Link>
+          <Link
+            to="/dashboard"
             className="flex overflow-hidden md:hidden max-w-[50px] object-cover max-h-[50px] items-center space-x-2"
           >
             <img
@@ -159,7 +159,7 @@ export default function DashboardLayout() {
               alt="Diven logo"
               className="object-cover w-[125px] h-[125px]"
             />
-          </a>
+          </Link>
           <div className="ml-auto flex items-center gap-4">
             <DropdownMenu>
               <DropdownMenuTrigger className="p-0" asChild>
@@ -204,10 +204,10 @@ export default function DashboardLayout() {
                       isActive={pathname === route.href}
                       tooltip={isCollapsed ? route.title : undefined}
                     >
-                      <a href={route.href}>
+                      <Link to={route.href}>
                         <route.icon className="h-5 w-5" />
                         <span>{route.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

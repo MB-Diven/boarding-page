@@ -1,6 +1,9 @@
 const enTranslations = {
   // Landing page translations
   landing: {
+    header: {
+      register: "Register",
+    },
     hero: {
       title: "Create Your Rental Business Website in Minutes",
       description:

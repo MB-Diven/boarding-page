@@ -1,6 +1,9 @@
 const ltTranslations = {
   // Landing page translations
   landing: {
+    header: {
+      register: "Registruotis",
+    },
     hero: {
       title: "Sukurkite savo nuomos verslo svetainę per kelias minutes",
       description:

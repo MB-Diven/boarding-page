@@ -3,10 +3,11 @@ import { useTranslation } from "react-i18next";
 import divenLogo from "../assets/logo_big.svg";
 import divenLogoSmall from "../assets/logo_small.svg";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { Link } from "react-router";
 
 const Header = () => {
   const pathname = window.location.pathname;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -65,14 +66,14 @@ const Header = () => {
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex gap-2 items-center space-x-2">
             <LanguageSwitcher />
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
             >
               {t("login.title")}
-            </a>
+            </Link>
             <Button asChild>
-              <a href="/onboard">{t("landing.hero.startFreeTrial")}</a>
+              <Link to="/onboard">{t("landing.header.register")}</Link>
             </Button>
           </nav>
         </div>

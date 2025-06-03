@@ -130,14 +130,15 @@ export default function SettingsPage() {
           );
 
         if (error) {
+          console.log("HERE");
           toast.error("There was an issue with uploading new logo!");
-        } else {
-          toast.success("Logo uploaded successfully!");
-          setChangeUser({
-            ...changeUser,
-            logo: `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/client-logos/${changeUser.businessName.toLowerCase()}-logo`,
-          });
+          return;
         }
+        toast.success("Logo uploaded successfully!");
+        setChangeUser({
+          ...changeUser,
+          logo: `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/client-logos/${changeUser.businessName.toLowerCase()}-logo`,
+        });
       }
     }
   };

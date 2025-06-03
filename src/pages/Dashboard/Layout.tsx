@@ -1,6 +1,7 @@
 import { Outlet, useNavigate, Link } from "react-router";
 
 import { useEffect, useState } from "react";
+import { Toaster } from "@/components/ui/sonner";
 import {
   BarChart3,
   Calendar,
@@ -66,11 +67,11 @@ export default function DashboardLayout() {
       href: "/dashboard/workers",
       icon: Users,
     },
-    {
-      title: "Analytics",
-      href: "/dashboard/analytics",
-      icon: BarChart3,
-    },
+    // {
+    //   title: "Analytics",
+    //   href: "/dashboard/analytics",
+    //   icon: BarChart3,
+    // },
     {
       title: "Appointments",
       href: "/dashboard/appointments",
@@ -241,6 +242,7 @@ export default function DashboardLayout() {
           </main>
         </div>
       </div>
+      <Toaster />
     </SidebarProvider>
   );
 }

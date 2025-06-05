@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AlertCircle,
   Check,
@@ -51,6 +51,7 @@ import { User } from "@/store/userSlice";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { lt } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 
 interface Deployment {
   id: string;
@@ -61,15 +62,17 @@ interface Deployment {
 }
 
 export default function SettingsPage() {
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user, workers } = useSelector((state: RootState) => state.user);
+  const totalRev = useMemo(
+    () => workers.reduce((acc, worker) => (acc += worker.revenue), 0),
+    [workers],
+  );
   const navigate = useNavigate();
   const [changeUser, setChangeUser] = useState<User | null>(user ?? null);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
-  const [payoutAmount, setPayoutAmount] = useState("0.00");
-  const [payoutSuccess, setPayoutSuccess] = useState(false);
+  const { t } = useTranslation();
   const [deploymentStatus, setDeploymentStatus] = useState<
     "idle" | "deploying" | "success" | "error"
   >("idle");
@@ -98,19 +101,6 @@ export default function SettingsPage() {
     }
   };
 
-  const handlePayout = () => {
-    // Simulate payout process
-    setTimeout(() => {
-      setPayoutSuccess(true);
-
-      // Close dialog after success
-      setTimeout(() => {
-        setPayoutDialogOpen(false);
-        setPayoutSuccess(false);
-      }, 2000);
-    }, 1500);
-  };
-
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (changeUser) {
       const file = e.target.files?.[0];
@@ -130,14 +120,13 @@ export default function SettingsPage() {
           );
 
         if (error) {
-          console.log("HERE");
           toast.error("There was an issue with uploading new logo!");
           return;
         }
         toast.success("Logo uploaded successfully!");
         setChangeUser({
           ...changeUser,
-          logo: `https://xmfozbvukwgcisiiwnkf.supabase.co/storage/v1/object/public/client-logos/${changeUser.businessName.toLowerCase()}-logo`,
+          logo: URL.createObjectURL(file),
         });
       }
     }
@@ -177,7 +166,6 @@ export default function SettingsPage() {
         .order("created_at", { ascending: false })
         .eq("client_id", user.id)
         .then(({ data }) => {
-          console.log(data);
           setDeployments(data as Deployment[]);
         });
     }
@@ -681,105 +669,30 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Mokėjimų nustatymai</CardTitle>
-              <CardDescription>
-                Valdykite savo mokėjimų nustatymus ir išmokas.
-              </CardDescription>
+              <CardDescription>Tikrinkit savo išmokas.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-t-4">
               <div className="rounded-md bg-muted p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-medium">
-                      Dabartinis balansas (NEVEIKIA)
-                    </h3>
-                    <p className="text-2xl font-bold">€1,245.50</p>
+                    <h3 className="font-medium">Dabartinis balansas</h3>
+                    <p className="text-2xl font-bold">
+                      €
+                      {new Intl.NumberFormat("de-DE", {
+                        style: "currency",
+                        currency: "EUR",
+                      }).format(totalRev)}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      Paskutinis atnaujinimas: 2023-04-27
+                      Paskutinis atnaujinimas:{" "}
+                      {format(new Date(), "dd.MM.yyyy")}
                     </p>
                   </div>
-                  <Dialog
-                    open={payoutDialogOpen}
-                    onOpenChange={setPayoutDialogOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button>
-                        <CreditCard className="mr-2 h-4 w-4" />
-                        Išmokėti lėšas
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Išmokėti lėšas</DialogTitle>
-                        <DialogDescription>
-                          Pasirinkite sumą, kurią norite išmokėti į savo banko
-                          sąskaitą.
-                        </DialogDescription>
-                      </DialogHeader>
-                      {payoutSuccess ? (
-                        <div className="flex flex-col items-center justify-center py-6 text-center">
-                          <div className="mb-4 rounded-full bg-green-100 p-3">
-                            <Check className="h-6 w-6 text-green-600" />
-                          </div>
-                          <h3 className="text-xl font-medium">
-                            Išmoka sėkminga!
-                          </h3>
-                          <p className="text-muted-foreground">
-                            Jūsų lėšos bus pervestos per 1-3 darbo dienas.
-                          </p>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="grid gap-4 py-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="payout-amount">
-                                Išmokos suma (€)
-                              </Label>
-                              <Input
-                                id="payout-amount"
-                                type="number"
-                                min="0"
-                                step="0.01"
-                                max="1245.50"
-                                value={payoutAmount}
-                                onChange={(e) =>
-                                  setPayoutAmount(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="payout-method">
-                                Išmokos būdas
-                              </Label>
-                              <Select defaultValue="bank">
-                                <SelectTrigger id="payout-method">
-                                  <SelectValue placeholder="Pasirinkite išmokos būdą" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="bank">
-                                    Banko pavedimas
-                                  </SelectItem>
-                                  <SelectItem value="paypal">PayPal</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button
-                              variant="outline"
-                              onClick={() => setPayoutDialogOpen(false)}
-                            >
-                              Atšaukti
-                            </Button>
-                            <Button onClick={handlePayout}>
-                              Patvirtinti išmoką
-                            </Button>
-                          </DialogFooter>
-                        </>
-                      )}
-                    </DialogContent>
-                  </Dialog>
                 </div>
               </div>
+              <h3 className="text-sm mt-2">
+                {t("dashboard.settings.payments.expectedPayments")}
+              </h3>
             </CardContent>
           </Card>
         </TabsContent>

@@ -393,6 +393,10 @@ const ltTranslations = {
     settings: {
       title: "Nustatymai",
       description: "Valdykite savo paskyros ir verslo nustatymus.",
+      payments: {
+        expectedPayments:
+          "Turėtumėt pamatyti išmokas savo nurodytoje sąskaitoje po kelių darbo dienų",
+      },
     },
   },
 };

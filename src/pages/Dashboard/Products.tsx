@@ -32,10 +32,10 @@ import { Textarea } from "@/components/ui/textarea";
 import supabase from "@/lib/supabase";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { Product, setProducts } from "@/store/userSlice";
+import { setProducts } from "@/store/userSlice";
 
 export default function ProductsPage() {
-  const { user, products } = useSelector((state: RootState) => state.user);
+  const { products } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [isEditProductDialogOpen, setIsEditProductDialogOpen] = useState(false);
@@ -70,21 +70,6 @@ export default function ProductsPage() {
         });
       });
   };
-
-  useEffect(() => {
-    if (!products.length && user) {
-      supabase
-        .from("products")
-        .select("*")
-        .in(
-          "id",
-          user.product_ids.map((id) => +id),
-        )
-        .then(({ data }) => {
-          dispatch(setProducts(data as Product[]));
-        });
-    }
-  }, [user, products]);
 
   return (
     <div className="flex flex-col gap-6">

@@ -17,14 +17,18 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getReservationChangeFromPreviousMonth } from "@/lib/clients";
 import supabase from "@/lib/supabase";
 import { useTranslation } from "react-i18next";
+import { setProducts, setWorkers } from "@/store/userSlice";
 
 export default function DashboardPage() {
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user, workers, products } = useSelector(
+    (state: RootState) => state.user,
+  );
+  const dispatch = useDispatch();
   const totalRev = useRef(null);
   const calledData = useRef(false);
   const [rezervations, setRezervationAnalytics] = useState({
@@ -62,17 +66,33 @@ export default function DashboardPage() {
           }
         });
 
-        user.worker_ids.forEach((workerId) => {
-          console.log(workerId);
+        if (!workers.length) {
           supabase
             .from("workers")
-            .select("revenue")
-            .eq("id", workerId)
-            .single()
+            .select("*")
+            .in("id", user.worker_ids)
             .then(({ data }) => {
-              totalRev.current = (totalRev.current || 0) + (data?.revenue ?? 0);
+              totalRev.current = (data || []).reduce(
+                (acc, curr) => (acc += curr.revenue),
+                0,
+              );
+              dispatch(setWorkers(data || []));
             });
-        });
+        }
+
+        if (!products.length) {
+          supabase
+            .from("products")
+            .select("*")
+            .in(
+              "id",
+              user.product_ids.map((id) => +id),
+            )
+            .then(({ data }) => {
+              dispatch(setProducts(data || []));
+            });
+        }
+
         calledData.current = true;
       }
     }

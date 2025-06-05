@@ -388,6 +388,10 @@ const enTranslations = {
     settings: {
       title: "Settings",
       description: "Manage your account and business settings.",
+      payments: {
+        expectedPayments:
+          "You should expect to see payments in your specified account within a few business days",
+      },
     },
   },
 };

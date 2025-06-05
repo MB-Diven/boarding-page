@@ -37,6 +37,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/store/userSlice";
 import supabase from "@/lib/supabase";
 import { RootState } from "@/store/store";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function DashboardLayout() {
   const pathname = window.location.pathname;
@@ -161,6 +162,7 @@ export default function DashboardLayout() {
             />
           </Link>
           <div className="ml-auto flex items-center gap-4">
+            <LanguageSwitcher />
             <DropdownMenu>
               <DropdownMenuTrigger className="p-0" asChild>
                 <Button variant="outline" size="sm" className="rounded-full">

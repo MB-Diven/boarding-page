@@ -62,14 +62,14 @@ export interface Client {
 
 export interface UserState {
   user?: User;
-  workers: Worker[];
+  workers: { workers: Worker[]; totalRev: number };
   products: Product[];
   clients?: Client[];
 }
 
 const initialState: UserState = {
   user: undefined,
-  workers: [],
+  workers: { workers: [], totalRev: 0 },
   products: [],
   clients: undefined,
 };
@@ -87,7 +87,10 @@ export const userSlice = createSlice({
     setClients: (state, action: PayloadAction<Client[]>) => {
       state.clients = action.payload;
     },
-    setWorkers: (state, action: PayloadAction<Worker[]>) => {
+    setWorkers: (
+      state,
+      action: PayloadAction<{ workers: Worker[]; totalRev: number }>
+    ) => {
       state.workers = action.payload;
     },
   },

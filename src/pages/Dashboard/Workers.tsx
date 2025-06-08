@@ -37,7 +37,9 @@ import { RootState } from "@/store/store";
 // }
 
 export default function WorkersPage() {
-  const { workers } = useSelector((state: RootState) => state.user);
+  const {
+    workers: { workers },
+  } = useSelector((state: RootState) => state.user);
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredWorkers = workers.filter((worker) =>

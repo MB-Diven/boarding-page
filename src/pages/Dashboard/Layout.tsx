@@ -34,7 +34,7 @@ import {
 import divenLogo from "../../assets/logo_big.svg";
 import divenLogoSmall from "../../assets/logo_small.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/store/userSlice";
+import { setProducts, setUser, setWorkers } from "@/store/userSlice";
 import supabase from "@/lib/supabase";
 import { RootState } from "@/store/store";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -43,7 +43,9 @@ export default function DashboardLayout() {
   const pathname = window.location.pathname;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user, workers, products } = useSelector(
+    (state: RootState) => state.user
+  );
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const routes = [
@@ -130,6 +132,37 @@ export default function DashboardLayout() {
             });
           }
         });
+
+      if (!workers.workers.length) {
+        supabase
+          .from("workers")
+          .select("*")
+          .in("id", user.worker_ids)
+          .then(({ data }) => {
+            dispatch(
+              setWorkers({
+                workers: data || [],
+                totalRev: (data || []).reduce(
+                  (acc, curr) => (acc += curr.revenue),
+                  0
+                ),
+              })
+            );
+          });
+      }
+
+      if (!products.length) {
+        supabase
+          .from("products")
+          .select("*")
+          .in(
+            "id",
+            user.product_ids.map((id) => +id)
+          )
+          .then(({ data }) => {
+            dispatch(setProducts(data || []));
+          });
+      }
     }
   }, [user]);
 

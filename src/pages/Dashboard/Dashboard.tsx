@@ -17,19 +17,16 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { getReservationChangeFromPreviousMonth } from "@/lib/clients";
-import supabase from "@/lib/supabase";
 import { useTranslation } from "react-i18next";
-import { setProducts, setWorkers } from "@/store/userSlice";
 
 export default function DashboardPage() {
-  const { user, workers, products } = useSelector(
-    (state: RootState) => state.user,
-  );
-  const dispatch = useDispatch();
-  const totalRev = useRef(null);
+  const {
+    user,
+    workers: { totalRev },
+  } = useSelector((state: RootState) => state.user);
   const calledData = useRef(false);
   const [rezervations, setRezervationAnalytics] = useState({
     sum: "0",
@@ -53,7 +50,7 @@ export default function DashboardPage() {
                   data.percentChange === "N/A" ? "0" : data.percentChange,
               });
             }
-          },
+          }
         );
 
         getReservationChangeFromPreviousMonth(user, "people").then((data) => {
@@ -65,33 +62,6 @@ export default function DashboardPage() {
             });
           }
         });
-
-        if (!workers.length) {
-          supabase
-            .from("workers")
-            .select("*")
-            .in("id", user.worker_ids)
-            .then(({ data }) => {
-              totalRev.current = (data || []).reduce(
-                (acc, curr) => (acc += curr.revenue),
-                0,
-              );
-              dispatch(setWorkers(data || []));
-            });
-        }
-
-        if (!products.length) {
-          supabase
-            .from("products")
-            .select("*")
-            .in(
-              "id",
-              user.product_ids.map((id) => +id),
-            )
-            .then(({ data }) => {
-              dispatch(setProducts(data || []));
-            });
-        }
 
         calledData.current = true;
       }
@@ -118,7 +88,7 @@ export default function DashboardPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">€{totalRev.current}</div>
+            <div className="text-2xl font-bold">€{totalRev}</div>
           </CardContent>
         </Card>
         <Card>

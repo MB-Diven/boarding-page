@@ -54,7 +54,10 @@ interface Deployment {
 }
 
 export default function SettingsPage() {
-  const { user, workers } = useSelector((state: RootState) => state.user);
+  const {
+    user,
+    workers: { workers },
+  } = useSelector((state: RootState) => state.user);
   const totalRev = useMemo(
     () => workers.reduce((acc, worker) => (acc += worker.revenue), 0),
     [workers]

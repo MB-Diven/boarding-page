@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MoreHorizontal, Package, Plus, Search, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -44,7 +44,7 @@ export default function ProductsPage() {
   const [editedProduct, setEditedProduct] = useState<any | null>(null);
 
   const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleDeleteProduct = (productId: number) => {
@@ -54,7 +54,7 @@ export default function ProductsPage() {
       .eq("id", productId)
       .then(() => {
         dispatch(
-          setProducts(products.filter((product) => product.id !== productId)),
+          setProducts(products.filter((product) => product.id !== productId))
         );
 
         supabase.from("client").update({

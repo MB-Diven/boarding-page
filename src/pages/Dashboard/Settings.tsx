@@ -1,15 +1,7 @@
 import type React from "react";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  AlertCircle,
-  Check,
-  CreditCard,
-  Globe,
-  Rocket,
-  Save,
-  Upload,
-} from "lucide-react";
+import { AlertCircle, Check, Globe, Rocket, Save, Upload } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -65,7 +57,7 @@ export default function SettingsPage() {
   const { user, workers } = useSelector((state: RootState) => state.user);
   const totalRev = useMemo(
     () => workers.reduce((acc, worker) => (acc += worker.revenue), 0),
-    [workers],
+    [workers]
   );
   const navigate = useNavigate();
   const [changeUser, setChangeUser] = useState<User | null>(user ?? null);
@@ -116,7 +108,7 @@ export default function SettingsPage() {
             {
               contentType: file.type,
               upsert: true,
-            },
+            }
           );
 
         if (error) {
@@ -725,7 +717,7 @@ export default function SettingsPage() {
                           "PPPP",
                           {
                             locale: lt,
-                          },
+                          }
                         )}
                       </span>
                     </div>

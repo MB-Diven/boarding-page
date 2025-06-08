@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   BarChart3,
   MoreHorizontal,
@@ -41,7 +41,7 @@ export default function WorkersPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredWorkers = workers.filter((worker) =>
-    worker.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    worker.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
